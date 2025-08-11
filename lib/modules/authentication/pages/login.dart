@@ -66,7 +66,9 @@ class Login extends StatelessWidget {
             SizedBox(height: 24),
             CustomButton(
               child: Text('Login', style: theme.textTheme.bodyLarge?.copyWith(color: Colors.white)),
-              onTap: () {},
+              onTap: () {
+                Navigator.pushNamed(context, PageRoutesName.layout);
+              },
             ),
             SizedBox(height: 24),
             Row(

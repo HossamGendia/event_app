@@ -2,6 +2,7 @@ import 'package:event_app/core/routes/page_routes_name.dart';
 import 'package:event_app/modules/authentication/pages/forget_password_view.dart';
 import 'package:event_app/modules/authentication/pages/login.dart';
 import 'package:event_app/modules/authentication/pages/register_view.dart';
+import 'package:event_app/modules/layout/layout_view.dart';
 import 'package:event_app/modules/splash/splash_screen.dart';
 import 'package:flutter/material.dart';
 
@@ -29,6 +30,12 @@ abstract class AppRouts {
       case PageRoutesName.forgetPassword:
         return MaterialPageRoute(
           builder: (_) => const ForgetPasswordView(),
+          settings: settings,
+        );
+
+      case PageRoutesName.layout:
+        return MaterialPageRoute(
+          builder: (_) => const LayoutView(),
           settings: settings,
         );
 

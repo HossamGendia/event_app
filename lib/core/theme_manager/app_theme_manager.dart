@@ -15,6 +15,26 @@ abstract class AppThemeManager {
         color: AppColors.appBarTitleColor,
       ),
     ),
+    bottomNavigationBarTheme: BottomNavigationBarThemeData(
+      type: BottomNavigationBarType.fixed,
+      backgroundColor: AppColors.primaryColor,
+      selectedIconTheme: IconThemeData(color: Colors.white),
+      unselectedIconTheme: IconThemeData(color: Colors.white),
+      selectedItemColor: Colors.white,
+      unselectedItemColor: Colors.white,
+      selectedLabelStyle: TextStyle(
+          fontFamily: "Inter",
+          fontSize: 12,
+          fontWeight: FontWeight.w700,
+          color: Colors.white
+      ),
+      unselectedLabelStyle: TextStyle(
+          fontFamily: "Inter",
+          fontSize: 12,
+          fontWeight: FontWeight.w700,
+          color: Colors.white
+      ),
+    ),
     textTheme: TextTheme(
       bodyLarge: TextStyle(
         fontFamily: "Inter",
@@ -27,6 +47,12 @@ abstract class AppThemeManager {
         fontSize: 16,
         fontWeight: FontWeight.w500,
         color: Colors.white,
+      ),
+      bodySmall: TextStyle(
+        fontFamily: "Inter",
+        fontSize: 12,
+        fontWeight: FontWeight.w700,
+        color: Colors.white
       ),
     ),
   );
