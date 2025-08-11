@@ -1,3 +1,4 @@
+import 'package:event_app/core/routes/page_routes_name.dart';
 import 'package:event_app/core/theme_manager/color_pallete.dart';
 import 'package:event_app/core/widgets/custom_text_form_field.dart';
 import 'package:flutter/material.dart';
@@ -46,7 +47,9 @@ class Login extends StatelessWidget {
             Align(
               alignment: Alignment.centerRight,
               child: TextButton(
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.pushNamed(context, PageRoutesName.forgetPassword);
+                } ,
                 child: Text(
                   'Forget Password?',
                   style: TextStyle(
@@ -76,13 +79,16 @@ class Login extends StatelessWidget {
                     color: Colors.black,
                   ),
                 ),
-                Text(
-                  " Create Account",
-                  style: theme.textTheme.bodyMedium?.copyWith(
-                    color: AppColors.primaryColor,
-                    decoration: TextDecoration.underline,
-                    decorationColor: AppColors.primaryColor,
-                    decorationThickness: 2,
+                GestureDetector(
+                  onTap: () => Navigator.pushNamed(context, PageRoutesName.register),
+                  child: Text(
+                    " Create Account",
+                    style: theme.textTheme.bodyMedium?.copyWith(
+                      color: AppColors.primaryColor,
+                      decoration: TextDecoration.underline,
+                      decorationColor: AppColors.primaryColor,
+                      decorationThickness: 2,
+                    ),
                   ),
                 ),
               ],
@@ -105,7 +111,7 @@ class Login extends StatelessWidget {
             ),
             SizedBox(height: 24),
             CustomButton(
-              bakgroundColor: Colors.white,
+              bakgroundColor: Colors.transparent,
               onTap: () {},
               child: Row(
                 spacing: 8,
