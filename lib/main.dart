@@ -16,11 +16,10 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: AppThemeManager.lightTheme,
+      //themeMode: AppThemeManager.lightTheme,
       darkTheme: AppThemeManager.darkTheme,
       initialRoute: PageRoutesName.initial,
       onGenerateRoute: AppRouts.onGenerateRoutes,
     );
   }
 }
-
-

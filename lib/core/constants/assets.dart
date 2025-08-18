@@ -16,5 +16,8 @@ abstract class Assets{
   static const String favoriteActiveIcon = 'assets/icons/favorite_Active_Icon.png';
   static const String profileActiveIcon = 'assets/icons/profile_Active_Icon.png';
 
+  static const String sportImage = 'assets/images/sport_image.png';
+
+
 
 }

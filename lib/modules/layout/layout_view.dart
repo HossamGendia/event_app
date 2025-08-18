@@ -1,14 +1,46 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bounceable/flutter_bounceable.dart';
 
 import '../../core/constants/assets.dart';
+import '../../core/constants/constants.dart';
+import '../../core/theme_manager/color_pallete.dart';
 
-class LayoutView extends StatelessWidget {
+class LayoutView extends StatefulWidget {
   const LayoutView({super.key});
 
   @override
+  State<LayoutView> createState() => _LayoutViewState();
+}
+
+class _LayoutViewState extends State<LayoutView> {
+
+  int selectedIndex = 0;
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
+      floatingActionButton: Bounceable(
+        onTap: (){
+
+        },
+        child: CircleAvatar(
+          backgroundColor: Colors.white,
+          radius:30,
+          child: CircleAvatar(
+            backgroundColor: AppColors.primaryColor,
+            child: Icon(Icons.add, color: Colors.white),
+          )
+        ),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      body: Constants.screens[selectedIndex],
       bottomNavigationBar: BottomNavigationBar(
+        currentIndex: selectedIndex,
+        onTap: (index){
+          setState(() {
+            selectedIndex = index;
+          });
+    },
+
         items: [
           BottomNavigationBarItem(
             icon: ImageIcon(AssetImage(Assets.homeIcon)),

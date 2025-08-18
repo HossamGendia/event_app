@@ -4,6 +4,7 @@ import 'color_pallete.dart';
 
 abstract class AppThemeManager {
   static ThemeData lightTheme = ThemeData(
+    primaryColor: AppColors.primaryColor,
     scaffoldBackgroundColor: AppColors.lightBackgroundColor,
     appBarTheme: AppBarTheme(
       centerTitle: true,
@@ -36,9 +37,16 @@ abstract class AppThemeManager {
       ),
     ),
     textTheme: TextTheme(
-      bodyLarge: TextStyle(
+      titleLarge: TextStyle(
         fontFamily: "Inter",
         fontSize: 24,
+        fontWeight: FontWeight.w700,
+        color: Colors.white,
+      ),
+
+      bodyLarge: TextStyle(
+        fontFamily: "Inter",
+        fontSize: 20,
         fontWeight: FontWeight.w500,
         color: Colors.white,
       ),
