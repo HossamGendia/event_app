@@ -8,7 +8,8 @@ class CustomTextFormField extends StatefulWidget {
   final Widget? prefixIcon;
   final String? hintText;
   final bool isPassword;
-
+  final int? maxLines;
+  final int? minLines;
   const CustomTextFormField({
     super.key,
     this.prefixIcon,
@@ -17,6 +18,8 @@ class CustomTextFormField extends StatefulWidget {
     this.onChanged,
     this.onFieldSubmitted,
     this.isPassword = false,
+    this.maxLines = 1,
+    this.minLines,
   });
 
   @override
@@ -30,6 +33,8 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      maxLines: widget.maxLines,
+      minLines: widget.minLines,
       controller: widget.controller,
       onChanged: widget.onChanged,
       onFieldSubmitted: widget.onFieldSubmitted,

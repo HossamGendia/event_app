@@ -17,7 +17,13 @@ abstract class Assets{
   static const String profileActiveIcon = 'assets/icons/profile_Active_Icon.png';
 
   static const String sportImage = 'assets/images/sport_image.png';
-
-
+  static const String birthdayImage = 'assets/images/birthday_image.png';
+  static const String bookClubImage = 'assets/images/book_club_image.png';
+  static const String eatingImage = 'assets/images/eating_image.png';
+  static const String exhibitionImage = 'assets/images/exhibition_image.png';
+  static const String gamingImage = 'assets/images/gaming_image.png';
+  static const String holidayImage = 'assets/images/holiday_image.png';
+  static const String meetingImage = 'assets/images/meeting_image.png';
+  static const String workShopImage = 'assets/images/workshop_Image.png';
 
 }

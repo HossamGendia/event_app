@@ -9,11 +9,11 @@ abstract class AppThemeManager {
     appBarTheme: AppBarTheme(
       centerTitle: true,
       backgroundColor: Colors.transparent,
-      iconTheme: IconThemeData(color: Colors.black),
+      iconTheme: IconThemeData(color: AppColors.primaryColor),
       titleTextStyle: TextStyle(
         fontSize: 20,
         fontWeight: FontWeight.w400,
-        color: AppColors.appBarTitleColor,
+        color: AppColors.primaryColor,
       ),
     ),
     bottomNavigationBarTheme: BottomNavigationBarThemeData(

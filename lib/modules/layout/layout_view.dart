@@ -3,6 +3,7 @@ import 'package:flutter_bounceable/flutter_bounceable.dart';
 
 import '../../core/constants/assets.dart';
 import '../../core/constants/constants.dart';
+import '../../core/routes/page_routes_name.dart';
 import '../../core/theme_manager/color_pallete.dart';
 
 class LayoutView extends StatefulWidget {
@@ -20,7 +21,7 @@ class _LayoutViewState extends State<LayoutView> {
     return Scaffold(
       floatingActionButton: Bounceable(
         onTap: (){
-
+          Navigator.pushNamed(context, PageRoutesName.eventCreation);
         },
         child: CircleAvatar(
           backgroundColor: Colors.white,

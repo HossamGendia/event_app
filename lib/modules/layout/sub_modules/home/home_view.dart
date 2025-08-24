@@ -14,28 +14,39 @@ class HomeView extends StatefulWidget {
 }
 
 class _HomeViewState extends State<HomeView> {
-
   int currentTapIndex = 0;
 
   List<CategoryData> categories = [
     //CategoryData(categoryTitle: 'All', categoryImage: '', categoryIcon: ''),
-    CategoryData(categoryTitle: 'Sports', categoryImage: '', categoryIcon: ''),
+    CategoryData(
+      categoryTitle: 'Sports',
+      categoryImage: '',
+      categoryIcon: Icons.sports_basketball,
+    ),
     CategoryData(
       categoryTitle: 'BirthDay',
       categoryImage: '',
-      categoryIcon: '',
+      categoryIcon: Icons.cake_outlined,
     ),
     CategoryData(
       categoryTitle: 'Book Clubs',
       categoryImage: '',
-      categoryIcon: '',
+      categoryIcon: Icons.menu_book_outlined,
     ),
-    CategoryData(categoryTitle: 'Meeting', categoryImage: '', categoryIcon: ''),
-    CategoryData(categoryTitle: 'Gaming', categoryImage: '', categoryIcon: ''),
+    CategoryData(
+      categoryTitle: 'Meeting',
+      categoryImage: '',
+      categoryIcon: Icons.meeting_room_outlined,
+    ),
+    CategoryData(
+      categoryTitle: 'Gaming',
+      categoryImage: '',
+      categoryIcon: Icons.gamepad_outlined,
+    ),
     CategoryData(
       categoryTitle: 'WorkShop',
       categoryImage: '',
-      categoryIcon: '',
+      categoryIcon: Icons.work,
     ),
   ];
 
@@ -119,29 +130,35 @@ class _HomeViewState extends State<HomeView> {
                   labelPadding: EdgeInsets.symmetric(horizontal: 4),
                   indicator: BoxDecoration(),
                   dividerColor: Colors.transparent,
-                  onTap: (index){
+                  onTap: (index) {
                     setState(() {
                       currentTapIndex = index;
                     });
-
                   },
                   tabs: categories.map((categoryDataElement) {
                     return TapItemWidget(
-                        isSelected: currentTapIndex == categories.indexOf(categoryDataElement),
-                        categoryData: categoryDataElement);
+                      isSelected:
+                          currentTapIndex ==
+                          categories.indexOf(categoryDataElement),
+                      categoryData: categoryDataElement,
+                    );
                   }).toList(),
                 ),
               ),
             ],
           ),
         ),
-        Expanded(child: ListView.separated(itemBuilder: (context, index){
-          return EventItemWidget();
-        }, separatorBuilder: (context, index){
-          return SizedBox(
-            height: 15,
-          );
-        }, itemCount: categories.length))
+        Expanded(
+          child: ListView.separated(
+            itemBuilder: (context, index) {
+              return EventItemWidget();
+            },
+            separatorBuilder: (context, index) {
+              return SizedBox(height: 15);
+            },
+            itemCount: categories.length,
+          ),
+        ),
       ],
     );
   }

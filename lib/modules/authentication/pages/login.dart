@@ -113,7 +113,7 @@ class Login extends StatelessWidget {
             ),
             SizedBox(height: 24),
             CustomButton(
-              bakgroundColor: Colors.transparent,
+              backgroundColor: Colors.transparent,
               onTap: () {},
               child: Row(
                 spacing: 8,

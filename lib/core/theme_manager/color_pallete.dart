@@ -9,6 +9,8 @@ abstract class AppColors{
   static const Color textFieldBorderErrorColor = Color(0xFFFF5659);
   static const Color appBarTitleColor = Color(0xFF101127);
   static const Color cardBackgroundColor = Color(0xFFF2FEFF);
+  static const Color generalColor = Color(0xff1C1C1C);
+  static const Color secondaryColor = Color(0xff5669FF);
 
 
 }
