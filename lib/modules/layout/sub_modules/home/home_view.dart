@@ -19,31 +19,37 @@ class _HomeViewState extends State<HomeView> {
   List<CategoryData> categories = [
     //CategoryData(categoryTitle: 'All', categoryImage: '', categoryIcon: ''),
     CategoryData(
+      id: "Sports",
       categoryTitle: 'Sports',
       categoryImage: '',
       categoryIcon: Icons.sports_basketball,
     ),
     CategoryData(
+      id: "BirthDay",
       categoryTitle: 'BirthDay',
       categoryImage: '',
       categoryIcon: Icons.cake_outlined,
     ),
     CategoryData(
+      id: "Book Clubs",
       categoryTitle: 'Book Clubs',
       categoryImage: '',
       categoryIcon: Icons.menu_book_outlined,
     ),
     CategoryData(
+      id: "Meeting",
       categoryTitle: 'Meeting',
       categoryImage: '',
       categoryIcon: Icons.meeting_room_outlined,
     ),
     CategoryData(
+      id: "Gaming",
       categoryTitle: 'Gaming',
       categoryImage: '',
       categoryIcon: Icons.gamepad_outlined,
     ),
     CategoryData(
+      id: "WorkShop",
       categoryTitle: 'WorkShop',
       categoryImage: '',
       categoryIcon: Icons.work,
