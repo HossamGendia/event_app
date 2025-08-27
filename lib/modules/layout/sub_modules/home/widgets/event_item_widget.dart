@@ -1,10 +1,16 @@
+import 'package:event_app/core/utils/firebase_firestore.dart';
+import 'package:event_app/modules/layout/sub_modules/home/models/event_data.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bounceable/flutter_bounceable.dart';
+import 'package:intl/intl.dart';
 
 import '../../../../../core/constants/assets.dart';
 import '../../../../../core/theme_manager/color_pallete.dart';
 
 class EventItemWidget extends StatelessWidget {
-  const EventItemWidget({super.key});
+
+  final EventData eventData;
+  const EventItemWidget({super.key, required this.eventData});
 
   @override
   Widget build(BuildContext context) {
@@ -15,7 +21,7 @@ class EventItemWidget extends StatelessWidget {
       padding: EdgeInsets.symmetric(horizontal: 16, vertical: 10),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(16),
-        image: DecorationImage(image: AssetImage(Assets.sportImage),
+        image: DecorationImage(image: AssetImage(eventData.eventCategoryImg),
         fit: BoxFit.cover,
         ),
       ),
@@ -29,7 +35,7 @@ class EventItemWidget extends StatelessWidget {
               color: AppColors.cardBackgroundColor,
               borderRadius: BorderRadius.circular(8.0)
             ),
-            child: Text('21\nNov', textAlign: TextAlign.center,style: theme.textTheme.bodyMedium?.copyWith(
+            child: Text(DateFormat("dd MMM").format(eventData.selectedDate), textAlign: TextAlign.center,style: theme.textTheme.bodyMedium?.copyWith(
               color: theme.primaryColor,
               fontWeight: FontWeight.w900,
               height: 1.2,
@@ -44,13 +50,23 @@ class EventItemWidget extends StatelessWidget {
             child: Row(
               children: [
                 Expanded(
-                  child: Text('Meeting for Updating The Development Method ', textAlign: TextAlign.start,style: theme.textTheme.bodyMedium?.copyWith(
+                  child: Text(eventData.eventTittle, textAlign: TextAlign.start,style: theme.textTheme.bodyMedium?.copyWith(
                     color: Colors.black,
                     fontWeight: FontWeight.w700,
                     height: 1.2,
                   ),),
                 ),
-                Icon(Icons.favorite_border)
+                Bounceable(
+                  onTap: (){
+                    eventData.isFavorite = ! eventData.isFavorite;
+                    FirebaseFirestoreUtils.updateEventTask(eventData: eventData);
+                  },
+                  child: Icon(eventData.isFavorite
+                  ? Icons.favorite
+                  : Icons.favorite_border,
+                  color: AppColors.primaryColor,
+                  ),
+                )
               ],
             ),
           )

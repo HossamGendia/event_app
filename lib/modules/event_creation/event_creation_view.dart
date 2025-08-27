@@ -1,10 +1,14 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:event_app/core/services/snackbar_services.dart';
 import 'package:event_app/core/theme_manager/color_pallete.dart';
+import 'package:event_app/core/utils/firebase_firestore.dart';
 import 'package:event_app/core/widgets/custom_button.dart';
 import 'package:event_app/core/widgets/custom_text_form_field.dart';
 import 'package:event_app/modules/event_creation/widget/create_event_tap_item_widget.dart';
 import 'package:event_app/modules/layout/sub_modules/home/models/event_data.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bounceable/flutter_bounceable.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:intl/intl.dart';
 
 import '../../core/constants/assets.dart';
@@ -18,7 +22,6 @@ class EventCreationView extends StatefulWidget {
 }
 
 class _EventCreationViewState extends State<EventCreationView> {
-
   int currentTapIndex = 0;
   DateTime? selectedDate;
 
@@ -30,37 +33,37 @@ class _EventCreationViewState extends State<EventCreationView> {
     CategoryData(
       id: "Sports",
       categoryTitle: 'Sports',
-      categoryImage: '',
-      categoryIcon: Icons.sports_basketball,
+      categoryImage: Assets.sportImage,
+      categoryIcon: Icons.sports_soccer,
     ),
     CategoryData(
       id: "BirthDay",
       categoryTitle: 'BirthDay',
-      categoryImage: '',
+      categoryImage: Assets.birthdayImage,
       categoryIcon: Icons.cake_outlined,
     ),
     CategoryData(
       id: "Book Clubs",
       categoryTitle: 'Book Clubs',
-      categoryImage: '',
+      categoryImage: Assets.bookClubImage,
       categoryIcon: Icons.menu_book_outlined,
     ),
     CategoryData(
       id: "Meeting",
       categoryTitle: 'Meeting',
-      categoryImage: '',
+      categoryImage: Assets.meetingImage,
       categoryIcon: Icons.meeting_room_outlined,
     ),
     CategoryData(
       id: "Gaming",
       categoryTitle: 'Gaming',
-      categoryImage: '',
+      categoryImage: Assets.gamingImage,
       categoryIcon: Icons.gamepad_outlined,
     ),
     CategoryData(
       id: "WorkShop",
       categoryTitle: 'WorkShop',
-      categoryImage: '',
+      categoryImage: Assets.workShopImage,
       categoryIcon: Icons.work,
     ),
   ];
@@ -69,27 +72,47 @@ class _EventCreationViewState extends State<EventCreationView> {
   Widget build(BuildContext context) {
     var theme = Theme.of(context);
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       floatingActionButton: SizedBox(
         width: double.infinity,
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16),
-          child: CustomButton(onTap : (){
+          child: CustomButton(
+            onTap: () {
+              if (formKey.currentState!.validate()) {
+                if (selectedDate != null) {
+                  var eventData = EventData(
+                    eventTittle: titleController.text,
+                    eventDescription: descriptionController.text,
+                    eventCategoryImg: categories[currentTapIndex].categoryImage,
+                    eventCategoryId: categories[currentTapIndex].id,
+                    selectedDate: selectedDate!,
+                  );
 
-            if(formKey.currentState!.validate()){
-              if(selectedDate != null){
-                var eventData = EventData(
-                  eventTittle: titleController.text,
-                  eventDescription: descriptionController.text,
-                  eventCategoryImg: categories[currentTapIndex].categoryImage,
-                  eventCategoryId: categories[currentTapIndex].id,
-                  selectedDate: selectedDate!,
-                );
+                  EasyLoading.show();
+
+                  FirebaseFirestoreUtils.creatNewEventTask(eventData).then((
+                    value,
+                  ) {
+                    Future.delayed(const Duration(seconds: 4), () {
+                      EasyLoading.dismiss();
+                      if (value) {
+                        Navigator.pop(context);
+                        SnackBarService.showSuccessMessage(
+                          "Event has been created Successfully",
+                        );
+                      } else {
+                        SnackBarService.showErrorMessage("somthing went wrong");
+                      }
+                    });
+                  });
+                }
               }
-            }
-          },
-              child: Text("Add Event", style: theme.textTheme.bodyMedium?.copyWith(
-                color: Colors.white
-              ),)
+            },
+            child: Text(
+              "Add Event",
+              style: theme.textTheme.bodyMedium?.copyWith(color: Colors.white),
+            ),
           ),
         ),
       ),
@@ -151,8 +174,8 @@ class _EventCreationViewState extends State<EventCreationView> {
                   color: AppColors.textFieldBorderColor,
                   size: 30,
                 ),
-                validator: (value){
-                  if(value == null || value.isEmpty){
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
                     return "Tittle is required";
                   }
                   return null;
@@ -166,12 +189,17 @@ class _EventCreationViewState extends State<EventCreationView> {
                 ),
               ),
               SizedBox(height: 5),
-              CustomTextFormField(controller: descriptionController, maxLines: 4, hintText: "Event Description",validator: (value){
-                if(value == null || value.isEmpty){
-                  return "Tittle is required  ";
-                }
-                return null;
-              },),
+              CustomTextFormField(
+                controller: descriptionController,
+                maxLines: 4,
+                hintText: "Event Description",
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return "Tittle is required  ";
+                  }
+                  return null;
+                },
+              ),
               SizedBox(height: 15),
               Row(
                 children: [
@@ -192,7 +220,11 @@ class _EventCreationViewState extends State<EventCreationView> {
                       getCurrentDate();
                     },
                     child: Text(
-                      selectedDate == null ? "Choose Date" : DateFormat("dd MM yyy").format(selectedDate!).toString(),
+                      selectedDate == null
+                          ? "Choose Date"
+                          : DateFormat(
+                              "dd MM yyy",
+                            ).format(selectedDate!).toString(),
                       style: theme.textTheme.bodyMedium?.copyWith(
                         color: AppColors.secondaryColor,
                       ),
@@ -233,7 +265,7 @@ class _EventCreationViewState extends State<EventCreationView> {
                       Container(
                         decoration: BoxDecoration(
                           color: AppColors.primaryColor,
-                          borderRadius: BorderRadius.circular(6)
+                          borderRadius: BorderRadius.circular(6),
                         ),
                         child: Icon(
                           Icons.my_location,
@@ -242,17 +274,21 @@ class _EventCreationViewState extends State<EventCreationView> {
                         ),
                       ),
                       SizedBox(width: 25),
-                      Text('Choose event Location', style: theme.textTheme.bodyMedium?.copyWith(
-                        color : AppColors.primaryColor,
+                      Text(
+                        'Choose event Location',
+                        style: theme.textTheme.bodyMedium?.copyWith(
+                          color: AppColors.primaryColor,
+                        ),
                       ),
-                      ) ,
                       Spacer(),
-                      Icon(Icons.arrow_forward_ios, color: AppColors.primaryColor)
+                      Icon(
+                        Icons.arrow_forward_ios,
+                        color: AppColors.primaryColor,
+                      ),
                     ],
                   ),
                 ),
               ),
-
             ],
           ),
         ),
@@ -260,8 +296,13 @@ class _EventCreationViewState extends State<EventCreationView> {
     );
   }
 
-  void getCurrentDate(){
-    showDatePicker(context: context, initialDate: DateTime.now(), firstDate: DateTime.now(), lastDate: DateTime.now().add(Duration(days: 365)),).then((value){
+  void getCurrentDate() {
+    showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime.now(),
+      lastDate: DateTime.now().add(Duration(days: 365)),
+    ).then((value) {
       setState(() {
         selectedDate = value;
       });

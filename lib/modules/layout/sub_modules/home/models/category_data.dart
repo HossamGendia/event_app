@@ -6,5 +6,10 @@ class CategoryData {
   final String categoryImage;
   final IconData categoryIcon;
 
-  CategoryData({required this.id, required this.categoryTitle, required this.categoryImage, required this.categoryIcon});
+  CategoryData({
+    required this.id,
+    required this.categoryTitle,
+    required this.categoryImage,
+    required this.categoryIcon,
+  });
 }

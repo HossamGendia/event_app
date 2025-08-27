@@ -35,6 +35,11 @@ class _LayoutViewState extends State<LayoutView> {
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       body: Constants.screens[selectedIndex],
       bottomNavigationBar: BottomNavigationBar(
+        type: BottomNavigationBarType.fixed,
+        backgroundColor: AppColors.primaryColor,
+        selectedItemColor: Colors.white,
+        unselectedItemColor: Colors.white70,
+
         currentIndex: selectedIndex,
         onTap: (index){
           setState(() {

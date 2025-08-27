@@ -8,7 +8,7 @@ abstract class AppThemeManager {
     scaffoldBackgroundColor: AppColors.lightBackgroundColor,
     appBarTheme: AppBarTheme(
       centerTitle: true,
-      backgroundColor: Colors.transparent,
+      backgroundColor: AppColors.primaryColor,
       iconTheme: IconThemeData(color: AppColors.primaryColor),
       titleTextStyle: TextStyle(
         fontSize: 20,
