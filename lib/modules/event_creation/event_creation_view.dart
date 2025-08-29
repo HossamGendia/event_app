@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:event_app/core/services/snackbar_services.dart';
 import 'package:event_app/core/theme_manager/color_pallete.dart';
-import 'package:event_app/core/utils/firebase_firestore.dart';
+import 'package:event_app/core/utils/firebase_firestore_utils.dart';
 import 'package:event_app/core/widgets/custom_button.dart';
 import 'package:event_app/core/widgets/custom_text_form_field.dart';
 import 'package:event_app/modules/event_creation/widget/create_event_tap_item_widget.dart';
@@ -10,9 +10,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bounceable/flutter_bounceable.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 
 import '../../core/constants/assets.dart';
 import '../layout/sub_modules/home/models/category_data.dart';
+import '../setting_provider.dart';
 
 class EventCreationView extends StatefulWidget {
   const EventCreationView({super.key});
@@ -117,9 +119,29 @@ class _EventCreationViewState extends State<EventCreationView> {
         ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-      appBar: AppBar(title: const Text("Create Event")),
+      appBar: AppBar(
+        backgroundColor: Provider.of<SettingProvider>(context).isDark()
+            ? AppColors.darkBackGroundColor
+            : AppColors.primaryColor,
+          leading: IconButton(
+            icon: Icon(
+              Icons.arrow_back,
+              color: Provider.of<SettingProvider>(context).isDark()
+                  ? AppColors.primaryColor
+                  : Colors.white,
+            ),
+            onPressed: () {
+              Navigator.pop(context);
+            },
+          ),
+          title:  Text("Create Event", style: TextStyle(
+        color: Provider.of<SettingProvider>(context).isDark()? AppColors.primaryColor : Colors.white
+      ),)),
       body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16.0),
+        padding: const EdgeInsets.only(
+          top: 16,
+          left: 16,
+            right: 16.0),
         child: Form(
           key: formKey,
           child: Column(
@@ -162,7 +184,7 @@ class _EventCreationViewState extends State<EventCreationView> {
               Text(
                 'Tittle',
                 style: theme.textTheme.bodyMedium?.copyWith(
-                  color: AppColors.generalColor,
+                  color: Provider.of<SettingProvider>(context).isDark()? Colors.white : AppColors.generalColor,
                 ),
               ),
               SizedBox(height: 5),
@@ -171,7 +193,7 @@ class _EventCreationViewState extends State<EventCreationView> {
                 hintText: "Event Tittle",
                 prefixIcon: Icon(
                   Icons.edit_note,
-                  color: AppColors.textFieldBorderColor,
+                  color: Provider.of<SettingProvider>(context).isDark()? Colors.white : AppColors.textFieldBorderColor,
                   size: 30,
                 ),
                 validator: (value) {
@@ -185,7 +207,7 @@ class _EventCreationViewState extends State<EventCreationView> {
               Text(
                 'Description',
                 style: theme.textTheme.bodyMedium?.copyWith(
-                  color: AppColors.generalColor,
+                  color: Provider.of<SettingProvider>(context).isDark()? Colors.white : AppColors.generalColor,
                 ),
               ),
               SizedBox(height: 5),
@@ -205,13 +227,13 @@ class _EventCreationViewState extends State<EventCreationView> {
                 children: [
                   Icon(
                     Icons.calendar_month_outlined,
-                    color: AppColors.generalColor,
+                    color: Provider.of<SettingProvider>(context).isDark()? Colors.white : AppColors.generalColor,
                   ),
                   SizedBox(width: 10),
                   Text(
                     "Event Date",
                     style: theme.textTheme.bodyMedium?.copyWith(
-                      color: AppColors.generalColor,
+                      color: Provider.of<SettingProvider>(context).isDark()? Colors.white : AppColors.generalColor,
                     ),
                   ),
                   Spacer(),
@@ -226,7 +248,7 @@ class _EventCreationViewState extends State<EventCreationView> {
                               "dd MM yyy",
                             ).format(selectedDate!).toString(),
                       style: theme.textTheme.bodyMedium?.copyWith(
-                        color: AppColors.secondaryColor,
+                        color:  AppColors.secondaryColor,
                       ),
                     ),
                   ),
@@ -234,12 +256,12 @@ class _EventCreationViewState extends State<EventCreationView> {
               ),
               Row(
                 children: [
-                  Icon(Icons.access_time, color: AppColors.generalColor),
+                  Icon(Icons.access_time, color: Provider.of<SettingProvider>(context).isDark()? Colors.white : AppColors.generalColor),
                   SizedBox(width: 10),
                   Text(
                     "Event Time",
                     style: theme.textTheme.bodyMedium?.copyWith(
-                      color: AppColors.generalColor,
+                      color: Provider.of<SettingProvider>(context).isDark()? Colors.white : AppColors.generalColor,
                     ),
                   ),
                   Spacer(),
@@ -264,13 +286,13 @@ class _EventCreationViewState extends State<EventCreationView> {
                     children: [
                       Container(
                         decoration: BoxDecoration(
-                          color: AppColors.primaryColor,
+                          color:  AppColors.primaryColor,
                           borderRadius: BorderRadius.circular(6),
                         ),
                         child: Icon(
                           Icons.my_location,
                           size: 30,
-                          color: Colors.white,
+                          color: Provider.of<SettingProvider>(context).isDark()? AppColors.darkBackGroundColor : Colors.white,
                         ),
                       ),
                       SizedBox(width: 25),

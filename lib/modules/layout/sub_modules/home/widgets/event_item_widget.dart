@@ -1,4 +1,4 @@
-import 'package:event_app/core/utils/firebase_firestore.dart';
+import 'package:event_app/core/utils/firebase_firestore_utils.dart';
 import 'package:event_app/modules/layout/sub_modules/home/models/event_data.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bounceable/flutter_bounceable.dart';

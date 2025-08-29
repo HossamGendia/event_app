@@ -1,5 +1,5 @@
 import 'package:event_app/core/theme_manager/color_pallete.dart';
-import 'package:event_app/core/utils/firebase_firestore.dart' show FirebaseFirestoreUtils;
+import 'package:event_app/core/utils/firebase_firestore_utils.dart' show FirebaseFirestoreUtils;
 import 'package:event_app/core/widgets/custom_text_form_field.dart';
 import 'package:event_app/modules/layout/sub_modules/home/models/event_data.dart' show EventData;
 import 'package:event_app/modules/layout/sub_modules/home/widgets/event_item_widget.dart' show EventItemWidget;

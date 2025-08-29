@@ -1,11 +1,13 @@
 import 'package:event_app/core/theme_manager/color_pallete.dart';
-import 'package:event_app/core/utils/firebase_firestore.dart'
+import 'package:event_app/core/utils/firebase_firestore_utils.dart'
     show FirebaseFirestoreUtils;
 import 'package:event_app/modules/layout/sub_modules/home/models/category_data.dart';
 import 'package:event_app/modules/layout/sub_modules/home/models/event_data.dart';
 import 'package:event_app/modules/layout/sub_modules/home/widgets/event_item_widget.dart';
 import 'package:event_app/modules/layout/sub_modules/home/widgets/tap_item_widget.dart';
+import 'package:event_app/modules/setting_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../../../../core/constants/assets.dart';
 
@@ -70,7 +72,7 @@ class _HomeViewState extends State<HomeView> {
           //height: mediaQuery.size.height * 0.25,
           padding: EdgeInsets.only(left: 16, right: 16, top: 40, bottom: 10),
           decoration: BoxDecoration(
-            color: AppColors.primaryColor,
+            color: Provider.of<SettingProvider>(context).isDark()? AppColors.darkBackGroundColor : AppColors.primaryColor,
             borderRadius: BorderRadius.only(
               bottomLeft: Radius.circular(24),
               bottomRight: Radius.circular(24),
@@ -112,7 +114,7 @@ class _HomeViewState extends State<HomeView> {
                         child: Text(
                           'EN',
                           style: theme.textTheme.bodyMedium?.copyWith(
-                            color: theme.primaryColor,
+                            color: AppColors.primaryColor,
                             fontWeight: FontWeight.w700,
                           ),
                         ),

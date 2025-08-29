@@ -26,4 +26,7 @@ abstract class Assets{
   static const String meetingImage = 'assets/images/meeting_image.png';
   static const String workShopImage = 'assets/images/workshop_Image.png';
 
+  static const String profileImage = 'assets/images/routeLogo.png';
+  //static const String profileImage = 'assets/images/photoo.jpg';
+
 }
