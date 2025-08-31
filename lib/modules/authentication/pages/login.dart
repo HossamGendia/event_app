@@ -2,8 +2,10 @@ import 'package:event_app/core/routes/page_routes_name.dart';
 import 'package:event_app/core/theme_manager/color_pallete.dart';
 import 'package:event_app/core/utils/firebase_authentication_utils.dart';
 import 'package:event_app/core/widgets/custom_text_form_field.dart';
+import 'package:event_app/modules/setting_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:provider/provider.dart';
 
 import '../../../core/constants/assets.dart';
 import '../../../core/widgets/custom_button.dart';
@@ -39,7 +41,9 @@ class _LoginState extends State<Login> {
                   padding: const EdgeInsets.all(10.0),
                   child: ImageIcon(
                     AssetImage(Assets.mailIcon),
-                    color: AppColors.textFieldBorderColor,
+                    color: Provider.of<SettingProvider>(context).isDark()
+                        ? Colors.white
+                        : AppColors.textFieldBorderColor,
                   ),
                 ),
                 hintText: 'Email',
@@ -50,15 +54,27 @@ class _LoginState extends State<Login> {
                   }
                   return null;
                 },
+                textStyle: TextStyle(
+                  color: Provider.of<SettingProvider>(context).isDark()
+                      ? Colors.white
+                      : Colors.black,
+                ),
               ),
               SizedBox(height: 16),
               CustomTextFormField(
+                hintStyle: TextStyle(
+                  color: Provider.of<SettingProvider>(context).isDark()
+                      ? Colors.grey[400]
+                      : Colors.grey[600],
+                ),
                 isPassword: true,
                 prefixIcon: Padding(
                   padding: const EdgeInsets.all(10.0),
                   child: ImageIcon(
-                    AssetImage(Assets.passwordIcon),
-                    color: AppColors.textFieldBorderColor,
+                    AssetImage(Assets.passwordIcon,),
+                    color: Provider.of<SettingProvider>(context).isDark()
+                        ? Colors.white
+                        :  AppColors.textFieldBorderColor,
                   ),
                 ),
                 hintText: 'Password',
@@ -69,6 +85,11 @@ class _LoginState extends State<Login> {
                   }
                   return null;
                 },
+                textStyle: TextStyle(
+                  color: Provider.of<SettingProvider>(context).isDark()
+                      ? Colors.white
+                      : Colors.black,
+                ),
               ),
               SizedBox(height: 16),
               Align(
@@ -100,7 +121,7 @@ class _LoginState extends State<Login> {
                 ),
                 onTap: () {
                   if (_formKey.currentState!.validate()) {
-                    EasyLoading.show;
+                    EasyLoading.show(status: "Loading...");
                     FirebaseAuthenticationUtils.signInWithEmailAndPassword(
                       emailAddress: _emailController.text,
                       password: _passwordController.text,
@@ -125,7 +146,9 @@ class _LoginState extends State<Login> {
                   Text(
                     "Don’t Have Account ?",
                     style: theme.textTheme.bodyMedium?.copyWith(
-                      color: Colors.black,
+                      color: Provider.of<SettingProvider>(context).isDark()
+                          ? Colors.white
+                          : Colors.black,
                     ),
                   ),
                   GestureDetector(

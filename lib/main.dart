@@ -45,7 +45,12 @@ class MyApp extends StatelessWidget {
       locale: Locale(provider.currentLanguage),
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
-      builder: EasyLoading.init(builder: BotToastInit()),
+      builder: (context, child) {
+        child = BotToastInit()(context, child);
+        child = EasyLoading.init()(context, child);
+        return child;
+      },
+      //builder: EasyLoading.init(builder: BotToastInit()),
     );
   }
 }

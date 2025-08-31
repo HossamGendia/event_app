@@ -1,7 +1,9 @@
 import 'package:event_app/core/utils/firebase_authentication_utils.dart';
 import 'package:event_app/core/utils/firebase_firestore_utils.dart';
+import 'package:event_app/modules/setting_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:provider/provider.dart';
 
 import '../../../core/constants/assets.dart';
 import '../../../core/routes/page_routes_name.dart';
@@ -26,7 +28,21 @@ class _RegisterViewState extends State<RegisterView> {
   Widget build(BuildContext context) {
     var theme = Theme.of(context);
     return Scaffold(
-      appBar: AppBar(title: Text('Register')),
+      //resizeToAvoidBottomInset: false,
+      appBar: AppBar(
+        backgroundColor: Provider.of<SettingProvider>(context).isDark()
+            ? AppColors.appBarTitleColor
+            : AppColors.lightBackgroundColor,
+        title: Text(
+          "Register",
+          style: TextStyle(
+            color: Provider.of<SettingProvider>(context).isDark()
+                ? AppColors.primaryColor
+                : Colors.black,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+      ),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16.0),
         child: Form(
@@ -41,7 +57,9 @@ class _RegisterViewState extends State<RegisterView> {
                   padding: const EdgeInsets.all(10.0),
                   child: ImageIcon(
                     AssetImage(Assets.personIcon),
-                    color: AppColors.textFieldBorderColor,
+                    color: Provider.of<SettingProvider>(context).isDark()
+                        ? Colors.white
+                        : AppColors.textFieldBorderColor,
                   ),
                 ),
                 controller: _nameController,
@@ -52,6 +70,11 @@ class _RegisterViewState extends State<RegisterView> {
                   }
                   return null;
                 },
+                textStyle: TextStyle(
+                  color: Provider.of<SettingProvider>(context).isDark()
+                      ? Colors.white
+                      : AppColors.textFieldBorderColor,
+                ),
               ),
               SizedBox(height: 24),
               CustomTextFormField(
@@ -59,7 +82,9 @@ class _RegisterViewState extends State<RegisterView> {
                   padding: const EdgeInsets.all(10.0),
                   child: ImageIcon(
                     AssetImage(Assets.mailIcon),
-                    color: AppColors.textFieldBorderColor,
+                    color: Provider.of<SettingProvider>(context).isDark()
+                        ? Colors.white
+                        : AppColors.textFieldBorderColor,
                   ),
                 ),
                 controller: _emailController,
@@ -76,6 +101,11 @@ class _RegisterViewState extends State<RegisterView> {
                   }
                   return null;
                 },
+                textStyle: TextStyle(
+                  color: Provider.of<SettingProvider>(context).isDark()
+                      ? Colors.white
+                      : AppColors.textFieldBorderColor,
+                ),
               ),
               SizedBox(height: 24),
               CustomTextFormField(
@@ -84,7 +114,9 @@ class _RegisterViewState extends State<RegisterView> {
                   padding: const EdgeInsets.all(10.0),
                   child: ImageIcon(
                     AssetImage(Assets.passwordIcon),
-                    color: AppColors.textFieldBorderColor,
+                    color: Provider.of<SettingProvider>(context).isDark()
+                        ? Colors.white
+                        : AppColors.textFieldBorderColor,
                   ),
                 ),
                 controller: _passwordController,
@@ -101,6 +133,11 @@ class _RegisterViewState extends State<RegisterView> {
                   }
                   return null;
                 },
+                textStyle: TextStyle(
+                  color: Provider.of<SettingProvider>(context).isDark()
+                      ? Colors.white
+                      : AppColors.textFieldBorderColor,
+                ),
               ),
               SizedBox(height: 24),
               CustomTextFormField(
@@ -109,7 +146,9 @@ class _RegisterViewState extends State<RegisterView> {
                   padding: const EdgeInsets.all(10.0),
                   child: ImageIcon(
                     AssetImage(Assets.passwordIcon),
-                    color: AppColors.textFieldBorderColor,
+                    color: Provider.of<SettingProvider>(context).isDark()
+                        ? Colors.white
+                        : AppColors.textFieldBorderColor,
                   ),
                 ),
                 hintText: 'Re Password',
@@ -122,6 +161,11 @@ class _RegisterViewState extends State<RegisterView> {
                   }
                   return null;
                 },
+                textStyle: TextStyle(
+                  color: Provider.of<SettingProvider>(context).isDark()
+                      ? Colors.white
+                      : Colors.black,
+                ),
               ),
               SizedBox(height: 24),
               CustomButton(
@@ -137,9 +181,9 @@ class _RegisterViewState extends State<RegisterView> {
                     FirebaseAuthenticationUtils.createUserWithEmailAndPassword(
                       emailAddress: _emailController.text,
                       password: _passwordController.text,
-                    ).then((value){
+                    ).then((value) {
                       EasyLoading.dismiss();
-                      if(value){
+                      if (value) {
                         Navigator.pop(context);
                       }
                     });
@@ -154,7 +198,9 @@ class _RegisterViewState extends State<RegisterView> {
                   Text(
                     "Already Have Account ?",
                     style: theme.textTheme.bodyMedium?.copyWith(
-                      color: Colors.black,
+                      color: Provider.of<SettingProvider>(context).isDark()
+                          ? Colors.white
+                          : Colors.black,
                     ),
                   ),
                   GestureDetector(

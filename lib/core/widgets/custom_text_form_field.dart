@@ -1,4 +1,6 @@
+import 'package:event_app/modules/setting_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import '../theme_manager/color_pallete.dart';
 
 class CustomTextFormField extends StatefulWidget {
@@ -10,6 +12,8 @@ class CustomTextFormField extends StatefulWidget {
   final bool isPassword;
   final int? maxLines;
   final int? minLines;
+  final TextStyle? hintStyle;
+  final TextStyle? textStyle;
   final String? Function(String?)? validator;
 
   const CustomTextFormField({
@@ -23,6 +27,8 @@ class CustomTextFormField extends StatefulWidget {
     this.maxLines = 1,
     this.minLines,
     this.validator,
+    this.textStyle,
+    this.hintStyle,
   });
 
   @override
@@ -30,8 +36,7 @@ class CustomTextFormField extends StatefulWidget {
 }
 
 class _CustomTextFormFieldState extends State<CustomTextFormField> {
-
-    bool obscureText = true;
+  bool obscureText = true;
 
   @override
   Widget build(BuildContext context) {
@@ -43,24 +48,31 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
       validator: widget.validator,
       onFieldSubmitted: widget.onFieldSubmitted,
       obscureText: widget.isPassword ? obscureText : false,
+      style: widget.textStyle,
       decoration: InputDecoration(
         hintText: widget.hintText,
         hintStyle: TextStyle(
           fontSize: 16,
           fontWeight: FontWeight.w500,
-          color: AppColors.textFieldBorderColor,
+          color: Provider.of<SettingProvider>(context).isDark()
+              ? Colors.white
+              : AppColors.textFieldBorderColor,
         ),
-        suffixIcon: widget.isPassword ? GestureDetector(
-          onTap: (){
-            setState(() {
-              obscureText = !obscureText;
-            });
-          },
-            child: Icon(
-              obscureText? Icons.visibility_off : Icons.visibility,
-            color: AppColors.textFieldBorderColor,
-            ),
-        ) : null ,
+        suffixIcon: widget.isPassword
+            ? GestureDetector(
+                onTap: () {
+                  setState(() {
+                    obscureText = !obscureText;
+                  });
+                },
+                child: Icon(
+                  obscureText ? Icons.visibility_off : Icons.visibility,
+                  color: Provider.of<SettingProvider>(context).isDark()
+                      ? Colors.white
+                      : AppColors.textFieldBorderColor,
+                ),
+              )
+            : null,
         prefixIcon: widget.prefixIcon,
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(16),

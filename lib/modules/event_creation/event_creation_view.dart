@@ -74,7 +74,7 @@ class _EventCreationViewState extends State<EventCreationView> {
   Widget build(BuildContext context) {
     var theme = Theme.of(context);
     return Scaffold(
-      resizeToAvoidBottomInset: false,
+      resizeToAvoidBottomInset: true,
       floatingActionButton: SizedBox(
         width: double.infinity,
         child: Padding(
@@ -123,195 +123,232 @@ class _EventCreationViewState extends State<EventCreationView> {
         backgroundColor: Provider.of<SettingProvider>(context).isDark()
             ? AppColors.darkBackGroundColor
             : AppColors.primaryColor,
-          leading: IconButton(
-            icon: Icon(
-              Icons.arrow_back,
-              color: Provider.of<SettingProvider>(context).isDark()
-                  ? AppColors.primaryColor
-                  : Colors.white,
-            ),
-            onPressed: () {
-              Navigator.pop(context);
-            },
+        leading: IconButton(
+          icon: Icon(
+            Icons.arrow_back,
+            color: Provider.of<SettingProvider>(context).isDark()
+                ? AppColors.primaryColor
+                : Colors.white,
           ),
-          title:  Text("Create Event", style: TextStyle(
-        color: Provider.of<SettingProvider>(context).isDark()? AppColors.primaryColor : Colors.white
-      ),)),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
+        title: Text(
+          "Create Event",
+          style: TextStyle(
+            color: Provider.of<SettingProvider>(context).isDark()
+                ? AppColors.primaryColor
+                : Colors.white,
+          ),
+        ),
+      ),
       body: Padding(
-        padding: const EdgeInsets.only(
-          top: 16,
-          left: 16,
-            right: 16.0),
-        child: Form(
-          key: formKey,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              ClipRRect(
-                borderRadius: BorderRadius.circular(16),
-                child: Image.asset(
-                  categories[currentTapIndex].categoryImage,
-                  height: 200,
-                  fit: BoxFit.cover,
-                ),
-              ),
-              SizedBox(height: 15),
-              DefaultTabController(
-                length: categories.length,
-                child: TabBar(
-                  isScrollable: true,
-                  padding: EdgeInsets.zero,
-                  tabAlignment: TabAlignment.start,
-                  labelPadding: EdgeInsets.symmetric(horizontal: 4),
-                  indicator: BoxDecoration(),
-                  dividerColor: Colors.transparent,
-                  onTap: (index) {
-                    setState(() {
-                      currentTapIndex = index;
-                    });
-                  },
-                  tabs: categories.map((categoryDataElement) {
-                    return CreateEventTapItemWidget(
-                      isSelected:
-                          currentTapIndex ==
-                          categories.indexOf(categoryDataElement),
-                      categoryData: categoryDataElement,
-                    );
-                  }).toList(),
-                ),
-              ),
-              SizedBox(height: 15),
-              Text(
-                'Tittle',
-                style: theme.textTheme.bodyMedium?.copyWith(
-                  color: Provider.of<SettingProvider>(context).isDark()? Colors.white : AppColors.generalColor,
-                ),
-              ),
-              SizedBox(height: 5),
-              CustomTextFormField(
-                controller: titleController,
-                hintText: "Event Tittle",
-                prefixIcon: Icon(
-                  Icons.edit_note,
-                  color: Provider.of<SettingProvider>(context).isDark()? Colors.white : AppColors.textFieldBorderColor,
-                  size: 30,
-                ),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return "Tittle is required";
-                  }
-                  return null;
-                },
-              ),
-              SizedBox(height: 15),
-              Text(
-                'Description',
-                style: theme.textTheme.bodyMedium?.copyWith(
-                  color: Provider.of<SettingProvider>(context).isDark()? Colors.white : AppColors.generalColor,
-                ),
-              ),
-              SizedBox(height: 5),
-              CustomTextFormField(
-                controller: descriptionController,
-                maxLines: 4,
-                hintText: "Event Description",
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return "Tittle is required  ";
-                  }
-                  return null;
-                },
-              ),
-              SizedBox(height: 15),
-              Row(
+        padding: const EdgeInsets.only(top: 16, left: 16, right: 16.0),
+        child: SafeArea(
+          child: SingleChildScrollView(
+            child: Form(
+              key: formKey,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  Icon(
-                    Icons.calendar_month_outlined,
-                    color: Provider.of<SettingProvider>(context).isDark()? Colors.white : AppColors.generalColor,
-                  ),
-                  SizedBox(width: 10),
-                  Text(
-                    "Event Date",
-                    style: theme.textTheme.bodyMedium?.copyWith(
-                      color: Provider.of<SettingProvider>(context).isDark()? Colors.white : AppColors.generalColor,
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(16),
+                    child: Image.asset(
+                      categories[currentTapIndex].categoryImage,
+                      height: 200,
+                      fit: BoxFit.cover,
                     ),
                   ),
-                  Spacer(),
-                  Bounceable(
-                    onTap: () {
-                      getCurrentDate();
+                  SizedBox(height: 15),
+                  DefaultTabController(
+                    length: categories.length,
+                    child: TabBar(
+                      isScrollable: true,
+                      padding: EdgeInsets.zero,
+                      tabAlignment: TabAlignment.start,
+                      labelPadding: EdgeInsets.symmetric(horizontal: 4),
+                      indicator: BoxDecoration(),
+                      dividerColor: Colors.transparent,
+                      onTap: (index) {
+                        setState(() {
+                          currentTapIndex = index;
+                        });
+                      },
+                      tabs: categories.map((categoryDataElement) {
+                        return CreateEventTapItemWidget(
+                          isSelected:
+                              currentTapIndex ==
+                              categories.indexOf(categoryDataElement),
+                          categoryData: categoryDataElement,
+                        );
+                      }).toList(),
+                    ),
+                  ),
+                  SizedBox(height: 15),
+                  Text(
+                    'Tittle',
+                    style: theme.textTheme.bodyMedium?.copyWith(
+                      color: Provider.of<SettingProvider>(context).isDark()
+                          ? Colors.white
+                          : AppColors.generalColor,
+                    ),
+                  ),
+                  SizedBox(height: 5),
+                  CustomTextFormField(
+                    controller: titleController,
+                    hintText: "Event Tittle",
+                    prefixIcon: Icon(
+                      Icons.edit_note,
+                      color: Provider.of<SettingProvider>(context).isDark()
+                          ? Colors.white
+                          : AppColors.textFieldBorderColor,
+                      size: 30,
+                    ),
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return "Tittle is required";
+                      }
+                      return null;
                     },
-                    child: Text(
-                      selectedDate == null
-                          ? "Choose Date"
-                          : DateFormat(
-                              "dd MM yyy",
-                            ).format(selectedDate!).toString(),
-                      style: theme.textTheme.bodyMedium?.copyWith(
-                        color:  AppColors.secondaryColor,
-                      ),
+                    textStyle: TextStyle(
+                      color: Provider.of<SettingProvider>(context).isDark()
+                          ? Colors.white
+                          : Colors.black,
                     ),
                   ),
-                ],
-              ),
-              Row(
-                children: [
-                  Icon(Icons.access_time, color: Provider.of<SettingProvider>(context).isDark()? Colors.white : AppColors.generalColor),
-                  SizedBox(width: 10),
+                  SizedBox(height: 15),
                   Text(
-                    "Event Time",
+                    'Description',
                     style: theme.textTheme.bodyMedium?.copyWith(
-                      color: Provider.of<SettingProvider>(context).isDark()? Colors.white : AppColors.generalColor,
+                      color: Provider.of<SettingProvider>(context).isDark()
+                          ? Colors.white
+                          : AppColors.generalColor,
                     ),
                   ),
-                  Spacer(),
-                  Bounceable(
-                    onTap: () {},
-                    child: Text(
-                      "Choose Time",
-                      style: theme.textTheme.bodyMedium?.copyWith(
-                        color: AppColors.secondaryColor,
-                      ),
+                  SizedBox(height: 5),
+                  CustomTextFormField(
+                    controller: descriptionController,
+                    maxLines: 4,
+                    hintText: "Event Description",
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return "Tittle is required  ";
+                      }
+                      return null;
+                    },
+                    textStyle: TextStyle(
+                      color: Provider.of<SettingProvider>(context).isDark()
+                          ? Colors.white
+                          : Colors.black,
                     ),
                   ),
-                ],
-              ),
-              SizedBox(height: 15),
-              CustomButton(
-                backgroundColor: Colors.transparent,
-                onTap: () {},
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 12.0),
-                  child: Row(
+                  SizedBox(height: 15),
+                  Row(
                     children: [
-                      Container(
-                        decoration: BoxDecoration(
-                          color:  AppColors.primaryColor,
-                          borderRadius: BorderRadius.circular(6),
-                        ),
-                        child: Icon(
-                          Icons.my_location,
-                          size: 30,
-                          color: Provider.of<SettingProvider>(context).isDark()? AppColors.darkBackGroundColor : Colors.white,
-                        ),
+                      Icon(
+                        Icons.calendar_month_outlined,
+                        color: Provider.of<SettingProvider>(context).isDark()
+                            ? Colors.white
+                            : AppColors.generalColor,
                       ),
-                      SizedBox(width: 25),
+                      SizedBox(width: 10),
                       Text(
-                        'Choose event Location',
+                        "Event Date",
                         style: theme.textTheme.bodyMedium?.copyWith(
-                          color: AppColors.primaryColor,
+                          color: Provider.of<SettingProvider>(context).isDark()
+                              ? Colors.white
+                              : AppColors.generalColor,
                         ),
                       ),
                       Spacer(),
-                      Icon(
-                        Icons.arrow_forward_ios,
-                        color: AppColors.primaryColor,
+                      Bounceable(
+                        onTap: () {
+                          getCurrentDate();
+                        },
+                        child: Text(
+                          selectedDate == null
+                              ? "Choose Date"
+                              : DateFormat(
+                                  "dd MM yyy",
+                                ).format(selectedDate!).toString(),
+                          style: theme.textTheme.bodyMedium?.copyWith(
+                            color: AppColors.secondaryColor,
+                          ),
+                        ),
                       ),
                     ],
                   ),
-                ),
+                  Row(
+                    children: [
+                      Icon(
+                        Icons.access_time,
+                        color: Provider.of<SettingProvider>(context).isDark()
+                            ? Colors.white
+                            : AppColors.generalColor,
+                      ),
+                      SizedBox(width: 10),
+                      Text(
+                        "Event Time",
+                        style: theme.textTheme.bodyMedium?.copyWith(
+                          color: Provider.of<SettingProvider>(context).isDark()
+                              ? Colors.white
+                              : AppColors.generalColor,
+                        ),
+                      ),
+                      Spacer(),
+                      Bounceable(
+                        onTap: () {},
+                        child: Text(
+                          "Choose Time",
+                          style: theme.textTheme.bodyMedium?.copyWith(
+                            color: AppColors.secondaryColor,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 15),
+                  CustomButton(
+                    backgroundColor: Colors.transparent,
+                    onTap: () {},
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 12.0),
+                      child: Row(
+                        children: [
+                          Container(
+                            decoration: BoxDecoration(
+                              color: AppColors.primaryColor,
+                              borderRadius: BorderRadius.circular(6),
+                            ),
+                            child: Icon(
+                              Icons.my_location,
+                              size: 30,
+                              color:
+                                  Provider.of<SettingProvider>(context).isDark()
+                                  ? AppColors.darkBackGroundColor
+                                  : Colors.white,
+                            ),
+                          ),
+                          SizedBox(width: 25),
+                          Text(
+                            'Choose event Location',
+                            style: theme.textTheme.bodyMedium?.copyWith(
+                              color: AppColors.primaryColor,
+                            ),
+                          ),
+                          Spacer(),
+                          Icon(
+                            Icons.arrow_forward_ios,
+                            color: AppColors.primaryColor,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
               ),
-            ],
+            ),
           ),
         ),
       ),

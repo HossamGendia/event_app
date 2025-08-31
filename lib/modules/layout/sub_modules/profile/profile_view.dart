@@ -115,6 +115,11 @@ class _ProfileViewState extends State<ProfileView> {
                 fontWeight: FontWeight.w600,
                 color: AppColors.primaryColor,
               ),
+              listItemStyle: theme.textTheme.bodyLarge?.copyWith(
+                color: AppColors.primaryColor,
+                fontWeight: FontWeight.w500,
+              ),
+              expandedFillColor: provider.isDark()? AppColors.darkBackGroundColor : Colors.white,
             ),
           ),
         ),
@@ -152,6 +157,11 @@ class _ProfileViewState extends State<ProfileView> {
                 fontWeight: FontWeight.w600,
                 color: AppColors.primaryColor,
               ),
+              listItemStyle: theme.textTheme.bodyLarge?.copyWith(
+                color: AppColors.primaryColor,
+                fontWeight: FontWeight.w500,
+              ),
+              expandedFillColor: provider.isDark()? AppColors.darkBackGroundColor : Colors.white,
             ),
           ),
         ),
