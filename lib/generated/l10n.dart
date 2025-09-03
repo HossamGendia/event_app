@@ -53,46 +53,6 @@ class S {
   static S? maybeOf(BuildContext context) {
     return Localizations.of<S>(context, S);
   }
-
-  /// `Home`
-  String get home {
-    return Intl.message('Home', name: 'home', desc: '', args: []);
-  }
-
-  /// `Maps`
-  String get maps {
-    return Intl.message('Maps', name: 'maps', desc: '', args: []);
-  }
-
-  /// `Favorites`
-  String get favorites {
-    return Intl.message('Favorites', name: 'favorites', desc: '', args: []);
-  }
-
-  /// `Profile`
-  String get profile {
-    return Intl.message('Profile', name: 'profile', desc: '', args: []);
-  }
-
-  /// `Language`
-  String get language {
-    return Intl.message('Language', name: 'language', desc: '', args: []);
-  }
-
-  /// `Theme`
-  String get theme_mode {
-    return Intl.message('Theme', name: 'theme_mode', desc: '', args: []);
-  }
-
-  /// `Light`
-  String get light {
-    return Intl.message('Light', name: 'light', desc: '', args: []);
-  }
-
-  /// `Dark`
-  String get dark {
-    return Intl.message('Dark', name: 'dark', desc: '', args: []);
-  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

@@ -3,6 +3,7 @@ import 'package:event_app/core/routes/app_routes.dart';
 import 'package:event_app/core/routes/page_routes_name.dart';
 import 'package:event_app/core/services/loading_services.dart';
 import 'package:event_app/core/theme_manager/app_theme_manager.dart';
+import 'package:event_app/manager/app_manager.dart';
 import 'package:event_app/modules/setting_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -19,9 +20,12 @@ void main() async {
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 
   runApp(
-    ChangeNotifierProvider(
-      create: (context) => SettingProvider(),
-      child : const MyApp(),
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => SettingProvider()),
+        ChangeNotifierProvider(create: (_) => AppProvider()),
+      ],
+      child: const MyApp(),
     ),
   );
   configLoading();
@@ -33,7 +37,6 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    
     var provider = Provider.of<SettingProvider>(context);
     return MaterialApp(
       themeMode: provider.currentTheme,

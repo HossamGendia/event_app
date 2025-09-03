@@ -5,5 +5,6 @@ abstract class PageRoutesName{
   static const String forgetPassword = '/forgetPassword';
   static const String layout = '/layout';
   static const String eventCreation = '/event_creation_view';
+  static const String pickEventMap = '/pick_event_map';
 
 }

@@ -38,7 +38,7 @@ abstract class SnackBarService {
         icon: Icons.warning,
         cancel: cancel,
       ),
-      duration: Duration(seconds: isLoading ? 0 : 3), // لو isLoading = true يفضل مفتوح
+      duration: Duration(seconds: isLoading ? 0 : 3),
     );
   }
 
@@ -54,7 +54,7 @@ abstract class SnackBarService {
     );
   }
 
-  /// 🔹 Widget reusable للرسائل
+
   static Widget _buildNotification({
     required String msg,
     required Color color,
