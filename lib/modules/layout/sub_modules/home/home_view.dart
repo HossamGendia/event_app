@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:event_app/core/theme_manager/color_pallete.dart';
 import 'package:event_app/core/utils/firebase_firestore_utils.dart'
     show FirebaseFirestoreUtils;
@@ -7,6 +8,7 @@ import 'package:event_app/modules/layout/sub_modules/home/widgets/event_item_wid
 import 'package:event_app/modules/layout/sub_modules/home/widgets/tap_item_widget.dart';
 import 'package:event_app/modules/setting_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bounceable/flutter_bounceable.dart';
 import 'package:provider/provider.dart';
 
 import '../../../../core/constants/assets.dart';
@@ -63,6 +65,8 @@ class _HomeViewState extends State<HomeView> {
 
   @override
   Widget build(BuildContext context) {
+    var provider = Provider.of<SettingProvider>(context);
+
     var mediaQuery = MediaQuery.of(context);
     var theme = Theme.of(context);
     return Column(
@@ -72,7 +76,9 @@ class _HomeViewState extends State<HomeView> {
           //height: mediaQuery.size.height * 0.25,
           padding: EdgeInsets.only(left: 16, right: 16, top: 40, bottom: 10),
           decoration: BoxDecoration(
-            color: Provider.of<SettingProvider>(context).isDark()? AppColors.darkBackGroundColor : AppColors.primaryColor,
+            color: Provider.of<SettingProvider>(context).isDark()
+                ? AppColors.darkBackGroundColor
+                : AppColors.primaryColor,
             borderRadius: BorderRadius.only(
               bottomLeft: Radius.circular(24),
               bottomRight: Radius.circular(24),
@@ -88,22 +94,33 @@ class _HomeViewState extends State<HomeView> {
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text('Welcome ✋', style: theme.textTheme.bodyMedium?.copyWith(
-                        color: Colors.white
-                      )),
-                      Text('Hossam Hassan', style: theme.textTheme.titleLarge?.copyWith(
-                        color: Colors.white
-                      )),
+                      Text(
+                        'Welcome ✋',
+                        style: theme.textTheme.bodyMedium?.copyWith(
+                          color: Colors.white,
+                        ),
+                      ),
+                      Text(
+                        'Hossam Hassan',
+                        style: theme.textTheme.titleLarge?.copyWith(
+                          color: Colors.white,
+                        ),
+                      ),
                     ],
                   ),
                   Spacer(),
                   Row(
                     spacing: 6,
                     children: [
-                      Icon(
-                        Icons.wb_sunny_outlined,
-                        size: 30,
-                        color: Colors.white,
+                      Bounceable(
+                        onTap : (){
+                      provider.changeThemeMode(provider.isDark()? ThemeMode.light : ThemeMode.dark);
+                      },
+                        child: Icon(
+                          Icons.wb_sunny_outlined,
+                          size: 30,
+                          color: Colors.white,
+                        ),
                       ),
                       Container(
                         padding: EdgeInsets.all(8),
@@ -111,11 +128,16 @@ class _HomeViewState extends State<HomeView> {
                           color: Colors.white,
                           borderRadius: BorderRadius.circular(8),
                         ),
-                        child: Text(
-                          'EN',
-                          style: theme.textTheme.bodyMedium?.copyWith(
-                            color: AppColors.primaryColor,
-                            fontWeight: FontWeight.w700,
+                        child: Bounceable(
+                          onTap: (){
+                            provider.changeLanguage(provider.isEnglish()? "ar" : "en");
+                          },
+                          child: Text(
+                            'EN',
+                            style: theme.textTheme.bodyMedium?.copyWith(
+                              color: AppColors.primaryColor,
+                              fontWeight: FontWeight.w700,
+                            ),
                           ),
                         ),
                       ),
@@ -164,48 +186,44 @@ class _HomeViewState extends State<HomeView> {
           ),
         ),
 
-
-        StreamBuilder(stream: FirebaseFirestoreUtils.getStreamEventTaskList(
-          categoryId: categories[selectedTapIndex].id
-        ),
-      builder: (context, snapshot){
-        if(snapshot.hasError){
-         return Center(
-           child: Text(snapshot.error.toString(),
-           style: theme.textTheme.bodyLarge?.copyWith(
-             color: Colors.black,
-           ),
-           ),
-         );
-        }
-        if(snapshot.connectionState == ConnectionState.waiting){
-          return Center(
-            child: CircularProgressIndicator(),
-          );
-        }
-
-        List<EventData> eventDataList =
-        snapshot.data!.docs.map((e) {
-          return e.data();
-        }).toList();
-
-        return eventDataList.isEmpty?
-        Center(child: Text("No Data"),):
         Expanded(
-          child: ListView.separated(
-            itemBuilder: (context, index) {
-              return EventItemWidget(
-                eventData: eventDataList[index],
-              );
-            },
-            separatorBuilder: (context, index) {
-              return SizedBox(height: 15);
-            },
-            itemCount: eventDataList.length,
-          ),
-        );
-      },),
+          child: StreamBuilder(
+            stream: FirebaseFirestoreUtils.getStreamEventTaskList(
+              categoryId: categories[selectedTapIndex].id,
+            ),
+            builder: (context, snapshot) {
+              if (snapshot.hasError) {
+                return Center(
+                  child: Text(
+                    snapshot.error.toString(),
+                    style: theme.textTheme.bodyLarge?.copyWith(
+                      color: Colors.black,
+                    ),
+                  ),
+                );
+              }
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return Center(child: CircularProgressIndicator());
+              }
 
+              List<EventData> eventDataList = snapshot.data!.docs.map((e) {
+                return e.data();
+              }).toList();
+
+              return eventDataList.isEmpty
+                  ? Center(child: Text("No Data"))
+                  : ListView.separated(
+                      itemBuilder: (context, index) {
+                        return EventItemWidget(eventData: eventDataList[index]);
+                      },
+                      separatorBuilder: (context, index) {
+                        return SizedBox(height: 15);
+                      },
+                      itemCount: eventDataList.length,
+                    );
+            },
+          ),
+        ),
 
         // FutureBuilder<List<EventData>>(
         //   future: FirebaseFirestoreUtils.getEventTaskList(),
@@ -242,7 +260,6 @@ class _HomeViewState extends State<HomeView> {
         //     );
         //   },
         // ),
-
       ],
     );
   }

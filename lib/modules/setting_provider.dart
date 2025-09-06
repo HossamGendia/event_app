@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class SettingProvider extends ChangeNotifier{
@@ -20,4 +19,5 @@ class SettingProvider extends ChangeNotifier{
   }
 
   bool isDark() => currentTheme == ThemeMode.dark;
+  bool isEnglish() => currentLanguage == "en";
 }

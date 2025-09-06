@@ -20,7 +20,7 @@ class CreateEventTapItemWidget extends StatelessWidget {
       ),
       child: Row(
         children: [
-          Icon(Icons.menu_book_rounded, color: isSelected? Colors.white : AppColors.primaryColor),
+          Icon(categoryData.categoryIcon, color: isSelected? Colors.white : AppColors.primaryColor),
           const SizedBox(width:8),
           Text(categoryData.categoryTitle, style: TextStyle(
             fontSize: 16,

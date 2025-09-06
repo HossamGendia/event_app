@@ -3,6 +3,7 @@ import 'package:event_app/manager/app_manager.dart';
 import 'package:event_app/modules/setting_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:location/location.dart';
 import 'package:provider/provider.dart';
 
 class MapsView extends StatefulWidget {
@@ -14,12 +15,14 @@ class MapsView extends StatefulWidget {
 
 class _MapsViewState extends State<MapsView> {
   late AppProvider appProvider;
+  GoogleMapController? _mapController;
+  bool _userMovedMap = false;
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    AppProvider appProvider = Provider.of<AppProvider>(context, listen: false);
+    appProvider = Provider.of<AppProvider>(context, listen: false);
     appProvider.getLocation();
     appProvider.setLocationListner();
   }
@@ -38,6 +41,7 @@ class _MapsViewState extends State<MapsView> {
         ),
         child: FloatingActionButton(onPressed: (){
           appProvider.getLocation();
+          _userMovedMap = false;
         },
         child: Icon(Icons.gps_fixed),
         ),
@@ -50,10 +54,14 @@ class _MapsViewState extends State<MapsView> {
               child: GoogleMap(
                 markers: provider.markers,
                 mapType: MapType.normal,
-                onMapCreated: (mapController) {
-                  provider.mapController = mapController;
+                onMapCreated: (controller) {
+                  _mapController = controller;
+                  provider.mapController = controller;
                 },
                 initialCameraPosition: provider.cameraPosition,
+                onCameraMoveStarted: () {
+                  _userMovedMap = true;
+                },
               ),
             ),
           ],
