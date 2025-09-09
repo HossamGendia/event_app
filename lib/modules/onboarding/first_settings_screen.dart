@@ -66,7 +66,12 @@ class _FirstSettingsScreenState extends State<FirstSettingsScreen> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    Text(local.language, style: theme.titleSmall),
+                    Text(local.language, style: theme.titleSmall!.copyWith(
+                      fontSize: 20,
+                      color: provider.isDark()
+                          ? AppColors.lightBackgroundColor
+                          : AppColors.darkBackGroundColor,
+                    )),
                     LanguageSwitch(
                       onLanguageChanged: (bool value) async {
                         provider.changeLanguage(value ? "en" : "ar");
@@ -85,7 +90,12 @@ class _FirstSettingsScreenState extends State<FirstSettingsScreen> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    Text(local.theme, style: theme.titleSmall),
+                    Text(local.theme, style: theme.titleSmall!.copyWith(
+                      fontSize: 20,
+                      color: provider.isDark()
+                          ? AppColors.lightBackgroundColor
+                          : AppColors.darkBackGroundColor,
+                    )),
                     GestureDetector(
                       onTap: () async {
                         provider.changeThemeMode(
@@ -153,7 +163,9 @@ class _FirstSettingsScreenState extends State<FirstSettingsScreen> {
                 alignment: Alignment.center,
                 child: Text(
                   local.lets_start,
-                  style: theme.titleSmall!.copyWith(color: AppColors.lightBackgroundColor),
+                  style: theme.titleSmall!.copyWith(
+                      fontSize: 20,
+                      color: AppColors.lightBackgroundColor),
                 ),
               ),
             ),

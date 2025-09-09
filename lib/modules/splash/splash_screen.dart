@@ -13,20 +13,18 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
+
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
-
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _navigate();
     });
   }
 
   void _navigate() async {
-    final hasSeenOnboarding =
-        LocalStorageServices.getBool(LocalStorageKeys.onboardingSeenKey) ??
-        false;
+    final hasSeenOnboarding = LocalStorageServices.getBool(
+        LocalStorageKeys.onboardingSeenKey) ?? false;
     await Future.delayed(Duration(seconds: 2));
 
     if (!mounted) return;
@@ -40,6 +38,12 @@ class _SplashScreenState extends State<SplashScreen> {
     } else {
       Navigator.pushReplacementNamed(context, PageRoutesName.layout);
     }
+
+    // Navigator.pushReplacementNamed(
+    //   context,
+    //   hasSeenOnboarding ? PageRoutesName.login :
+    //   PageRoutesName.firstOnboarding,
+    // );
   }
 
   @override

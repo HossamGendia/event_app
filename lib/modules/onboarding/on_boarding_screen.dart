@@ -1,4 +1,3 @@
-
 import 'package:event_app/core/constants/assets.dart';
 import 'package:event_app/core/routes/page_routes_name.dart';
 import 'package:event_app/core/services/local_storage_keys.dart';
@@ -8,8 +7,6 @@ import 'package:event_app/l10n/app_localizations.dart';
 import 'package:event_app/modules/setting_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
-
 
 class OnBoardingScreen extends StatefulWidget {
   const OnBoardingScreen({super.key});
@@ -113,7 +110,12 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
                       Image.asset(Assets.onboarding1),
                       Text(
                         local.find_event,
-                        style: theme.titleMedium,
+                        style: theme.titleMedium!.copyWith(
+                          fontSize: 20,
+                          color: provider.isDark()
+                              ? AppColors.lightBackgroundColor
+                              : AppColors.darkBackGroundColor,
+                        ),
                         softWrap: true,
                       ),
                       Align(
@@ -121,6 +123,7 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
                         child: Text(
                           local.onBoarding1Description,
                           style: theme.bodyLarge!.copyWith(
+                            fontSize: 16,
                             color: provider.isDark()
                                 ? AppColors.lightBackgroundColor
                                 : AppColors.darkBackGroundColor,
@@ -143,7 +146,12 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
                       Image.asset(Assets.onboarding2),
                       Text(
                         local.effortless,
-                        style: theme.titleMedium,
+                        style: theme.titleMedium!.copyWith(
+                          fontSize: 20,
+                          color: provider.isDark()
+                              ? AppColors.lightBackgroundColor
+                              : AppColors.darkBackGroundColor,
+                        ),
                         softWrap: true,
                       ),
                       Align(
@@ -151,6 +159,7 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
                         child: Text(
                           local.onBoarding2Description,
                           style: theme.bodyLarge!.copyWith(
+                            fontSize: 16,
                             color: provider.isDark()
                                 ? AppColors.lightBackgroundColor
                                 : AppColors.darkBackGroundColor,
@@ -173,7 +182,12 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
                       Image.asset(Assets.onboarding3),
                       Text(
                         local.connect,
-                        style: theme.titleMedium,
+                        style: theme.titleMedium!.copyWith(
+                          fontSize: 20,
+                          color: provider.isDark()
+                              ? AppColors.lightBackgroundColor
+                              : AppColors.darkBackGroundColor,
+                        ),
                         softWrap: true,
                       ),
                       Align(
@@ -181,6 +195,7 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
                         child: Text(
                           local.onBoarding3Description,
                           style: theme.bodyLarge!.copyWith(
+                            fontSize: 16,
                             color: provider.isDark()
                                 ? AppColors.lightBackgroundColor
                                 : AppColors.darkBackGroundColor,
@@ -216,9 +231,15 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
                         color: Colors.transparent,
 
                         borderRadius: BorderRadius.circular(30),
-                        border: Border.all(width: 1, color: AppColors.primaryColor),
+                        border: Border.all(
+                          width: 1,
+                          color: AppColors.primaryColor,
+                        ),
                       ),
-                      child: Icon(Icons.arrow_back, color: AppColors.primaryColor),
+                      child: Icon(
+                        Icons.arrow_back,
+                        color: AppColors.primaryColor,
+                      ),
                     ),
                   ),
                   Row(
@@ -242,7 +263,10 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
                       decoration: BoxDecoration(
                         color: Colors.transparent,
                         borderRadius: BorderRadius.circular(30),
-                        border: Border.all(width: 1, color: AppColors.primaryColor),
+                        border: Border.all(
+                          width: 1,
+                          color: AppColors.primaryColor,
+                        ),
                       ),
                       child: Icon(
                         Icons.arrow_forward,
