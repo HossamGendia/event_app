@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:event_app/core/theme_manager/color_pallete.dart';
-import 'package:event_app/core/utils/firebase_firestore_utils.dart'
-    show FirebaseFirestoreUtils;
+import 'package:event_app/core/utils/firebase_firestore_utils.dart';
+import 'package:event_app/l10n/app_localizations.dart';
 import 'package:event_app/modules/layout/sub_modules/home/models/category_data.dart';
 import 'package:event_app/modules/layout/sub_modules/home/models/event_data.dart';
 import 'package:event_app/modules/layout/sub_modules/home/widgets/event_item_widget.dart';
@@ -26,37 +26,31 @@ class _HomeViewState extends State<HomeView> {
   List<CategoryData> categories = [
     //CategoryData(categoryTitle: 'All', categoryImage: '', categoryIcon: ''),
     CategoryData(
-      id: "Sports",
       categoryTitle: 'Sports',
       categoryImage: Assets.sportImage,
       categoryIcon: Icons.sports_soccer,
     ),
     CategoryData(
-      id: "BirthDay",
       categoryTitle: 'BirthDay',
       categoryImage: Assets.birthdayImage,
       categoryIcon: Icons.cake_outlined,
     ),
     CategoryData(
-      id: "Book Clubs",
       categoryTitle: 'Book Clubs',
       categoryImage: Assets.bookClubImage,
       categoryIcon: Icons.menu_book_outlined,
     ),
     CategoryData(
-      id: "Meeting",
       categoryTitle: 'Meeting',
       categoryImage: Assets.meetingImage,
       categoryIcon: Icons.meeting_room_outlined,
     ),
     CategoryData(
-      id: "Gaming",
       categoryTitle: 'Gaming',
       categoryImage: Assets.gamingImage,
       categoryIcon: Icons.gamepad_outlined,
     ),
     CategoryData(
-      id: "WorkShop",
       categoryTitle: 'WorkShop',
       categoryImage: Assets.workShopImage,
       categoryIcon: Icons.work,
@@ -69,11 +63,13 @@ class _HomeViewState extends State<HomeView> {
 
     var mediaQuery = MediaQuery.of(context);
     var theme = Theme.of(context);
+    var local = AppLocalizations.of(context)!;
+
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
+      //crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         Container(
-          //height: mediaQuery.size.height * 0.25,
+          height: mediaQuery.size.height * 0.25,
           padding: EdgeInsets.only(left: 16, right: 16, top: 40, bottom: 10),
           decoration: BoxDecoration(
             color: Provider.of<SettingProvider>(context).isDark()
@@ -87,6 +83,7 @@ class _HomeViewState extends State<HomeView> {
           child: Column(
             spacing: 20,
             crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -113,9 +110,13 @@ class _HomeViewState extends State<HomeView> {
                     spacing: 6,
                     children: [
                       Bounceable(
-                        onTap : (){
-                      provider.changeThemeMode(provider.isDark()? ThemeMode.light : ThemeMode.dark);
-                      },
+                        onTap: () {
+                          provider.changeThemeMode(
+                            provider.isDark()
+                                ? ThemeMode.light
+                                : ThemeMode.dark,
+                          );
+                        },
                         child: Icon(
                           Icons.wb_sunny_outlined,
                           size: 30,
@@ -129,11 +130,13 @@ class _HomeViewState extends State<HomeView> {
                           borderRadius: BorderRadius.circular(8),
                         ),
                         child: Bounceable(
-                          onTap: (){
-                            provider.changeLanguage(provider.isEnglish()? "ar" : "en");
+                          onTap: () {
+                            provider.changeLanguage(
+                              provider.isEnglish() ? "ar" : "en",
+                            );
                           },
                           child: Text(
-                            'EN',
+                            provider.isEnglish() ? 'EN' : 'AR',
                             style: theme.textTheme.bodyMedium?.copyWith(
                               color: AppColors.primaryColor,
                               fontWeight: FontWeight.w700,
@@ -186,33 +189,40 @@ class _HomeViewState extends State<HomeView> {
           ),
         ),
 
-        Expanded(
-          child: StreamBuilder(
-            stream: FirebaseFirestoreUtils.getStreamEventTaskList(
-              categoryId: categories[selectedTapIndex].id,
-            ),
-            builder: (context, snapshot) {
-              if (snapshot.hasError) {
-                return Center(
-                  child: Text(
-                    snapshot.error.toString(),
-                    style: theme.textTheme.bodyLarge?.copyWith(
-                      color: Colors.black,
-                    ),
+        StreamBuilder(
+          stream: FirebaseFirestoreUtils.getStreamEventTaskList(
+            categoryId: categories[selectedTapIndex].categoryTitle,
+          ),
+          builder: (context, snapshot) {
+            if (snapshot.hasError) {
+              return Center(
+                child: Text(
+                  snapshot.error.toString(),
+                  style: theme.textTheme.bodyLarge?.copyWith(
+                    color: Colors.black,
                   ),
-                );
-              }
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return Center(child: CircularProgressIndicator());
-              }
+                ),
+              );
+            }
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return Center(child: CircularProgressIndicator());
+            }
 
-              List<EventData> eventDataList = snapshot.data!.docs.map((e) {
-                return e.data();
-              }).toList();
+            List<EventData> eventDataList = snapshot.data!.docs.map((e) {
+              return e.data();
+            }).toList();
 
-              return eventDataList.isEmpty
-                  ? Center(child: Text("No Data"))
-                  : ListView.separated(
+            return eventDataList.isEmpty
+                ? Expanded(
+                  child: Center(
+                      child: Text(
+                        "You Don't Have Any Event In This Category",
+                        style: TextStyle(color: AppColors.primaryColor),
+                      ),
+                    ),
+                )
+                : Expanded(
+                    child: ListView.separated(
                       itemBuilder: (context, index) {
                         return EventItemWidget(eventData: eventDataList[index]);
                       },
@@ -220,9 +230,9 @@ class _HomeViewState extends State<HomeView> {
                         return SizedBox(height: 15);
                       },
                       itemCount: eventDataList.length,
-                    );
-            },
-          ),
+                    ),
+                  );
+          },
         ),
 
         // FutureBuilder<List<EventData>>(

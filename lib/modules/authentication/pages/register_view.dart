@@ -1,6 +1,7 @@
 import 'package:event_app/core/utils/firebase_authentication_utils.dart';
 import 'package:event_app/core/utils/firebase_firestore_utils.dart';
 import 'package:event_app/modules/setting_provider.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:provider/provider.dart';
@@ -181,9 +182,12 @@ class _RegisterViewState extends State<RegisterView> {
                     FirebaseAuthenticationUtils.createUserWithEmailAndPassword(
                       emailAddress: _emailController.text,
                       password: _passwordController.text,
-                    ).then((value) {
-                      EasyLoading.dismiss();
+                    ).then((value) async {
+                      await FirebaseAuth.instance.currentUser!
+                          .updateDisplayName(_nameController.text);
+                      await FirebaseAuth.instance.currentUser!.reload();
                       if (value) {
+                        EasyLoading.dismiss();
                         Navigator.pop(context);
                       }
                     });

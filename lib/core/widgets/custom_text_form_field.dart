@@ -168,7 +168,10 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
       validator: widget.validator,
       onFieldSubmitted: widget.onFieldSubmitted,
       obscureText: widget.isPassword ? obscureText : false,
-      style: widget.textStyle,
+      style: Theme.of(context).textTheme.titleLarge!.copyWith(
+        fontSize: 16,
+        color: Colors.grey
+      ),
       decoration: InputDecoration(
         labelText: widget.labelText,
         hintText: widget.hintText,

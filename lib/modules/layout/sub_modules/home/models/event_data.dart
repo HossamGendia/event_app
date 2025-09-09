@@ -54,7 +54,6 @@ class EventData {
   String eventTittle;
   String eventDescription;
   String eventCategoryImg;
-  int eventCategoryIcn; // 👈 بدل Icon بقي int
   String eventCategoryId;
   bool isFavorite;
   DateTime selectedDate;
@@ -67,7 +66,6 @@ class EventData {
     required this.eventTittle,
     required this.eventDescription,
     required this.eventCategoryImg,
-    required this.eventCategoryIcn,
     required this.eventCategoryId,
     this.isFavorite = false,
     required this.selectedDate,
@@ -85,7 +83,6 @@ class EventData {
       eventTittle: data["eventTittle"],
       eventDescription: data["eventDescription"],
       eventCategoryImg: data["eventCategoryImg"],
-      eventCategoryIcn: data["eventCategoryIcn"], // 👈 int بييجي من Firestore
       eventCategoryId: data["eventCategoryId"],
       isFavorite: data["isFavorite"],
       selectedDate: DateTime.fromMillisecondsSinceEpoch(data["selectedDate"]),
@@ -101,7 +98,6 @@ class EventData {
       "eventTittle": eventTittle,
       "eventDescription": eventDescription,
       "eventCategoryImg": eventCategoryImg,
-      "eventCategoryIcn": eventCategoryIcn, // 👈 نخزن int
       "eventCategoryId": eventCategoryId,
       "isFavorite": isFavorite,
       "selectedDate": selectedDate.millisecondsSinceEpoch,

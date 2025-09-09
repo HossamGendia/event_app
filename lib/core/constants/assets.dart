@@ -15,6 +15,8 @@ abstract class Assets{
   static const String mapsActiveIcon = 'assets/icons/maps_Active_Icon.png';
   static const String favoriteActiveIcon = 'assets/icons/favorite_Active_Icon.png';
   static const String profileActiveIcon = 'assets/icons/profile_Active_Icon.png';
+  static const String deleteIcon = 'assets/icons/delete_Icn.png';
+  static const String editIcon = 'assets/icons/edit_icn.png';
 
   static const String sportImage = 'assets/images/sport_image.png';
   static const String birthdayImage = 'assets/images/birthday_image.png';
@@ -28,5 +30,14 @@ abstract class Assets{
 
   static const String profileImage = 'assets/images/routeLogo.png';
   //static const String profileImage = 'assets/images/photoo.jpg';
+
+  static const String headerLogo = "assets/images/Header Logo.png";
+  static const String firstSettings = "assets/images/First Settings.png";
+  static const String flagUS = "assets/icons/US Switch Icon.png";
+  static const String flagEG = "assets/icons/EG Switch Icon.png";
+
+  static const String onboarding1 = "assets/images/onboarding1.png";
+  static const String onboarding2 = "assets/images/onboarding2.png";
+  static const String onboarding3 = "assets/images/onboarding3.png";
 
 }

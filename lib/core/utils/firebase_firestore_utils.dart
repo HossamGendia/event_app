@@ -24,11 +24,20 @@ abstract class FirebaseFirestoreUtils {
     }
   }
 
-  static Future<void> updateEventTask({required EventData eventData}) async {
-    var collectionReference = _getCollectionReference();
-    var docReference = collectionReference.doc(eventData.eventId);
-    await docReference.update(eventData.toFireStore());
+  static Future<bool> updateEventTask({required EventData eventData}) async {
+    try {
+      if (eventData.eventId == null) return false; // تأكد الأول
+
+      var collectionReference = _getCollectionReference();
+      var docReference = collectionReference.doc(eventData.eventId);
+
+      await docReference.update(eventData.toFireStore());
+      return true;
+    } catch (e) {
+      return false;
+    }
   }
+
 
   static Future<void> deleteEventTask({required EventData eventData}) async {
     var collectionReference = _getCollectionReference();

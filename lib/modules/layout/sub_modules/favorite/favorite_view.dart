@@ -5,8 +5,17 @@ import 'package:event_app/modules/layout/sub_modules/home/models/event_data.dart
 import 'package:event_app/modules/layout/sub_modules/home/widgets/event_item_widget.dart' show EventItemWidget;
 import 'package:flutter/material.dart';
 
-class FavoriteView extends StatelessWidget {
+class FavoriteView extends StatefulWidget {
   const FavoriteView({super.key});
+
+  @override
+  State<FavoriteView> createState() => _FavoriteViewState();
+}
+
+class _FavoriteViewState extends State<FavoriteView> {
+
+  final TextEditingController _searchController = TextEditingController();
+  String _searchQuery = '';
 
   @override
   Widget build(BuildContext context) {
@@ -18,8 +27,15 @@ class FavoriteView extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.all(16.0),
             child: CustomTextFormField(
+              controller: _searchController,
               hintText: "search for event",
+
               prefixIcon: Icon(Icons.search, color: AppColors.primaryColor,),
+              onChanged: (value){
+                setState(() {
+                  _searchQuery = value.toLowerCase();
+                });
+              },
             ),
           ),
           //SizedBox(height: 16,),
@@ -40,14 +56,32 @@ class FavoriteView extends StatelessWidget {
                 );
               }
 
-              List<EventData> eventDataList =
-              snapshot.data!.docs.map((e) {
-                return e.data();
-              }).toList();
+              List<EventData> eventDataList = snapshot.data!.docs
+                  .map((e) => e.data())
+                  .where((event) => event.eventTittle
+                  .toLowerCase()
+                  .contains(_searchQuery))
+                  .toList();
 
-              return eventDataList.isEmpty?
-              Center(child: Text("No Data"),):
-              Expanded(
+              if (eventDataList.isEmpty) {
+                return Expanded(
+                  child: Center(
+                    child: Text(
+                      "You Don't have Favorite Events",
+                      style: TextStyle(
+                        color: AppColors.lightBackgroundColor,
+                        fontSize: 16,
+                        fontWeight: FontWeight.w500,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                );
+              }
+
+              //return eventDataList.isEmpty?
+              //Center(child: Text("No Data"),):
+              return Expanded(
                 child: ListView.separated(
                   itemBuilder: (context, index) {
                     return EventItemWidget(

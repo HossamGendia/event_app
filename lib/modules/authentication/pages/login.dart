@@ -1,12 +1,13 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:event_app/core/routes/page_routes_name.dart';
 import 'package:event_app/core/theme_manager/color_pallete.dart';
 import 'package:event_app/core/utils/firebase_authentication_utils.dart';
 import 'package:event_app/core/widgets/custom_text_form_field.dart';
 import 'package:event_app/modules/setting_provider.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:provider/provider.dart';
-
 import '../../../core/constants/assets.dart';
 import '../../../core/widgets/custom_button.dart';
 
@@ -125,17 +126,37 @@ class _LoginState extends State<Login> {
                     FirebaseAuthenticationUtils.signInWithEmailAndPassword(
                       emailAddress: _emailController.text,
                       password: _passwordController.text,
-                    ).then((value) {
+                    ).then((success) async {
+                      //   EasyLoading.dismiss();
+                      //   if (value) {
+                      //     Navigator.of(context).pushNamedAndRemoveUntil(
+                      //       PageRoutesName.layout,
+                      //       (route) => false,
+                      //     );
+                      //   }
+                      // }
                       EasyLoading.dismiss();
-                      if (value) {
-                        Navigator.of(context).pushNamedAndRemoveUntil(
-                          PageRoutesName.layout,
-                          (route) => false,
-                        );
+
+                      if (!success) return;
+
+                      final uid = FirebaseAuth.instance.currentUser!.uid;
+                      final userDoc = await FirebaseFirestore.instance
+                          .collection("users").doc(uid).get();
+
+                      if (!userDoc.exists) {
+                        await FirebaseFirestore.instance.collection("users")
+                            .doc(uid)
+                            .set({
+                          "email": FirebaseAuth.instance.currentUser!.email,
+                          "createdAt": FieldValue.serverTimestamp(),
+                        });
                       }
+
+                      Navigator.of(context).pushReplacementNamed(
+                          PageRoutesName.layout);
                     });
                   }
-                  Navigator.pushNamed(context, PageRoutesName.layout);
+                  //Navigator.pushNamed(context, PageRoutesName.layout);
                 },
               ),
               SizedBox(height: 24),

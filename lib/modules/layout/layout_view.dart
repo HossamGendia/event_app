@@ -72,6 +72,8 @@ class _LayoutViewState extends State<LayoutView> {
             activeIcon: ImageIcon(AssetImage(Assets.profileActiveIcon)),
             label: local.profile,
           ),
+
+
         ],
       ),
     );

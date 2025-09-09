@@ -2,9 +2,11 @@ import 'dart:developer';
 
 import 'package:animated_custom_dropdown/custom_dropdown.dart';
 import 'package:event_app/core/constants/assets.dart';
+import 'package:event_app/core/routes/page_routes_name.dart';
 import 'package:event_app/core/theme_manager/color_pallete.dart';
 import 'package:event_app/l10n/app_localizations.dart';
 import 'package:event_app/modules/setting_provider.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -165,6 +167,53 @@ class _ProfileViewState extends State<ProfileView> {
             ),
           ),
         ),
+
+        Spacer(),
+
+        GestureDetector(
+          onTap: () async {
+            // Navigator.of(context).pushNamed(PageRoutesName.login);
+
+            //await FirebaseAuth.instance.signOut();
+            // provider.changeThemeMode(ThemeMode.light);
+            // provider.changeLanguage("en");
+            Navigator.pushNamedAndRemoveUntil(
+              context,
+              PageRoutesName.login,
+                  (route) => false,
+            );
+
+          },
+          child: Container(
+            width: double.infinity,
+            height: 55,
+            padding: const EdgeInsets.all(8.0),
+            margin:  const EdgeInsets.all(8.0),
+            decoration: BoxDecoration(
+                color: Colors.red,
+                borderRadius: BorderRadius.circular(16)
+            ),
+            child: Padding(
+              padding: const EdgeInsets.only(left: 16.0),
+              child: Row(
+                  spacing: 10,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Icon(Icons.logout,color: AppColors.lightBackgroundColor,size: 25,),
+                    Text(
+                      "Logout",
+                      style: theme.textTheme.titleMedium!.copyWith(
+                        color: AppColors.lightBackgroundColor,
+                      ),
+                    ),
+                  ]
+              ),
+            ),
+          ),
+        ),
+
+        SizedBox(height:  40)
       ],
     );
   }

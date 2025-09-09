@@ -456,6 +456,7 @@ import 'package:event_app/modules/layout/sub_modules/home/models/event_data.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_bounceable/flutter_bounceable.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import '../../core/constants/assets.dart';
@@ -463,26 +464,50 @@ import '../layout/sub_modules/home/models/category_data.dart';
 import '../setting_provider.dart';
 
 class EventCreationView extends StatefulWidget {
-  const EventCreationView({super.key});
+  const EventCreationView({super.key, this.eventData});
+
+  final EventData? eventData;
 
   @override
   State<EventCreationView> createState() => _EventCreationViewState();
 }
 
 class _EventCreationViewState extends State<EventCreationView> {
+  void initState() {
+    super.initState();
+    appProvider = Provider.of<AppProvider>(context, listen: false);
+
+    if (widget.eventData != null) {
+      // Fill text fields
+      titleController.text = widget.eventData!.eventTittle;
+      descriptionController.text = widget.eventData!.eventDescription;
+
+      // Set category index (find the matching category by title or img)
+      final index = categories.indexWhere(
+        (cat) => cat.categoryTitle == widget.eventData!.eventCategoryId,
+      );
+
+      if (index != -1) {
+        currentTapIndex = index;
+      }
+
+      appProvider.eventLocation = LatLng(
+        widget.eventData!.lat!,
+        widget.eventData!.long!,
+      );
+      // Set date & time
+      selectedDate = widget.eventData!.selectedDate;
+      selectedTime = widget.eventData!.selectedDate;
+    }
+  }
+
   int currentTapIndex = 0;
   DateTime? selectedDate;
-  TimeOfDay? selectedTime;
+  DateTime? selectedTime;
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
   final TextEditingController titleController = TextEditingController();
   final TextEditingController descriptionController = TextEditingController();
   late AppProvider appProvider;
-
-  @override
-  void initState() {
-    super.initState();
-    appProvider = Provider.of<AppProvider>(context, listen: false);
-  }
 
   @override
   void dispose() {
@@ -493,37 +518,31 @@ class _EventCreationViewState extends State<EventCreationView> {
 
   List<CategoryData> categories = [
     CategoryData(
-      id: "Sports",
       categoryTitle: 'Sports',
       categoryImage: Assets.sportImage,
       categoryIcon: Icons.sports_soccer,
     ),
     CategoryData(
-      id: "BirthDay",
       categoryTitle: 'BirthDay',
       categoryImage: Assets.birthdayImage,
       categoryIcon: Icons.cake_outlined,
     ),
     CategoryData(
-      id: "Book Clubs",
       categoryTitle: 'Book Clubs',
       categoryImage: Assets.bookClubImage,
       categoryIcon: Icons.menu_book_outlined,
     ),
     CategoryData(
-      id: "Meeting",
       categoryTitle: 'Meeting',
       categoryImage: Assets.meetingImage,
       categoryIcon: Icons.meeting_room_outlined,
     ),
     CategoryData(
-      id: "Gaming",
       categoryTitle: 'Gaming',
       categoryImage: Assets.gamingImage,
       categoryIcon: Icons.gamepad_outlined,
     ),
     CategoryData(
-      id: "WorkShop",
       categoryTitle: 'WorkShop',
       categoryImage: Assets.workShopImage,
       categoryIcon: Icons.work,
@@ -551,28 +570,56 @@ class _EventCreationViewState extends State<EventCreationView> {
                   return;
                 }
                 if (appProvider.eventLocation == null) {
-                  SnackBarService.showErrorMessage("Please choose event location");
+                  SnackBarService.showErrorMessage(
+                    "Please choose event location",
+                  );
                   return;
                 }
 
+                final DateTime combinedDateTime = DateTime(
+                  selectedDate!.year,
+                  selectedDate!.month,
+                  selectedDate!.day,
+                  selectedTime!.hour,
+                  selectedTime!.minute,
+                );
+
                 var eventData = EventData(
+                  eventId: widget.eventData?.eventId,
                   eventTittle: titleController.text,
                   eventDescription: descriptionController.text,
                   eventCategoryImg: categories[currentTapIndex].categoryImage,
-                  eventCategoryIcn: categories[currentTapIndex].categoryIcon?.codePoint ?? 0,
-                  eventCategoryId: categories[currentTapIndex].id,
-                  selectedDate: selectedDate!,
-                  lat: appProvider.eventLocation!.latitude,
-                  long: appProvider.eventLocation!.longitude,
+                  eventCategoryId: categories[currentTapIndex].categoryTitle,
+                  selectedDate: combinedDateTime,
+                  lat: appProvider.eventLocation!.latitude ?? 0,
+                  long: appProvider.eventLocation!.longitude ?? 0,
                 );
 
                 try {
                   EasyLoading.show();
-                  bool value = await FirebaseFirestoreUtils.createNewEventTask(eventData);
+
+                  Future<bool> value;
+                  if (widget.eventData == null) {
+                    value = FirebaseFirestoreUtils.createNewEventTask(
+                      eventData,
+                    );
+                  } else {
+                    value = FirebaseFirestoreUtils.updateEventTask(
+                      eventData: eventData,
+                    );
+                  }
+
                   EasyLoading.dismiss();
-                  if (value) {
-                    Navigator.pop(context);
-                    SnackBarService.showSuccessMessage("Event has been created Successfully");
+                  if (await value) {
+                    Navigator.pushReplacementNamed(
+                      context,
+                      PageRoutesName.layout,
+                    );
+                    SnackBarService.showSuccessMessage(
+                      widget.eventData == null
+                          ? "Event has been created Successfully"
+                          : "Event has been updated Successfully",
+                    );
                   } else {
                     SnackBarService.showErrorMessage("Something went wrong");
                   }
@@ -646,16 +693,29 @@ class _EventCreationViewState extends State<EventCreationView> {
                       },
                       tabs: categories.map((categoryDataElement) {
                         return CreateEventTapItemWidget(
-                          isSelected: currentTapIndex == categories.indexOf(categoryDataElement),
+                          isSelected:
+                              currentTapIndex ==
+                              categories.indexOf(categoryDataElement),
                           categoryData: categoryDataElement,
                         );
                       }).toList(),
                     ),
                   ),
                   SizedBox(height: 15),
-                  _buildTextField("Title", titleController, "Event Title", theme),
+                  _buildTextField(
+                    "Title",
+                    titleController,
+                    "Event Title",
+                    theme,
+                  ),
                   SizedBox(height: 15),
-                  _buildTextField("Description", descriptionController, "Event Description", theme, maxLines: 4),
+                  _buildTextField(
+                    "Description",
+                    descriptionController,
+                    "Event Description",
+                    theme,
+                    maxLines: 4,
+                  ),
                   SizedBox(height: 15),
                   _buildDatePicker(theme),
                   SizedBox(height: 10),
@@ -672,14 +732,22 @@ class _EventCreationViewState extends State<EventCreationView> {
     );
   }
 
-  Widget _buildTextField(String label, TextEditingController controller, String hint, ThemeData theme, {int maxLines = 1}) {
+  Widget _buildTextField(
+    String label,
+    TextEditingController controller,
+    String hint,
+    ThemeData theme, {
+    int maxLines = 1,
+  }) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
           label,
           style: theme.textTheme.bodyMedium?.copyWith(
-            color: Provider.of<SettingProvider>(context).isDark() ? Colors.white : AppColors.generalColor,
+            color: Provider.of<SettingProvider>(context).isDark()
+                ? Colors.white
+                : AppColors.generalColor,
           ),
         ),
         SizedBox(height: 5),
@@ -687,9 +755,12 @@ class _EventCreationViewState extends State<EventCreationView> {
           controller: controller,
           maxLines: maxLines,
           hintText: hint,
-          validator: (value) => (value == null || value.isEmpty) ? "$label is required" : null,
+          validator: (value) =>
+              (value == null || value.isEmpty) ? "$label is required" : null,
           textStyle: TextStyle(
-            color: Provider.of<SettingProvider>(context).isDark() ? Colors.white : Colors.black,
+            color: Provider.of<SettingProvider>(context).isDark()
+                ? Colors.white
+                : Colors.black,
           ),
         ),
       ],
@@ -699,20 +770,31 @@ class _EventCreationViewState extends State<EventCreationView> {
   Widget _buildDatePicker(ThemeData theme) {
     return Row(
       children: [
-        Icon(Icons.calendar_month_outlined, color: Provider.of<SettingProvider>(context).isDark() ? Colors.white : AppColors.generalColor),
+        Icon(
+          Icons.calendar_month_outlined,
+          color: Provider.of<SettingProvider>(context).isDark()
+              ? Colors.white
+              : AppColors.generalColor,
+        ),
         SizedBox(width: 10),
         Text(
           "Event Date",
           style: theme.textTheme.bodyMedium?.copyWith(
-            color: Provider.of<SettingProvider>(context).isDark() ? Colors.white : AppColors.generalColor,
+            color: Provider.of<SettingProvider>(context).isDark()
+                ? Colors.white
+                : AppColors.generalColor,
           ),
         ),
         Spacer(),
         Bounceable(
           onTap: getCurrentDate,
           child: Text(
-            selectedDate == null ? "Choose Date" : DateFormat("dd/MM/yyyy").format(selectedDate!),
-            style: theme.textTheme.bodyMedium?.copyWith(color: AppColors.secondaryColor),
+            selectedDate == null
+                ? "Choose Date"
+                : DateFormat("dd/MM/yyyy").format(selectedDate!),
+            style: theme.textTheme.bodyMedium?.copyWith(
+              color: AppColors.secondaryColor,
+            ),
           ),
         ),
       ],
@@ -722,27 +804,33 @@ class _EventCreationViewState extends State<EventCreationView> {
   Widget _buildTimePicker(ThemeData theme) {
     return Row(
       children: [
-        Icon(Icons.access_time, color: Provider.of<SettingProvider>(context).isDark() ? Colors.white : AppColors.generalColor),
+        Icon(
+          Icons.access_time,
+          color: Provider.of<SettingProvider>(context).isDark()
+              ? Colors.white
+              : AppColors.generalColor,
+        ),
         SizedBox(width: 10),
         Text(
           "Event Time",
           style: theme.textTheme.bodyMedium?.copyWith(
-            color: Provider.of<SettingProvider>(context).isDark() ? Colors.white : AppColors.generalColor,
+            color: Provider.of<SettingProvider>(context).isDark()
+                ? Colors.white
+                : AppColors.generalColor,
           ),
         ),
         Spacer(),
         Bounceable(
           onTap: () {
-            showTimePicker(
-              context: context,
-              initialTime: TimeOfDay.now(),
-            ).then((value) {
-              if (value != null) setState(() => selectedTime = value);
-            });
+            getCurrentTime();
           },
           child: Text(
-            selectedTime == null ? "Choose Time" : selectedTime!.format(context),
-            style: theme.textTheme.bodyMedium?.copyWith(color: AppColors.secondaryColor),
+            selectedTime == null
+                ? "Choose Time"
+                : DateFormat("h:mm a").format(selectedTime!).toString(),
+            style: theme.textTheme.bodyMedium?.copyWith(
+              color: AppColors.secondaryColor,
+            ),
           ),
         ),
       ],
@@ -753,7 +841,8 @@ class _EventCreationViewState extends State<EventCreationView> {
     return Consumer<AppProvider>(
       builder: (context, provider, child) => CustomButton(
         backgroundColor: Colors.transparent,
-        onTap: () => Navigator.of(context).pushNamed(PageRoutesName.pickEventMap),
+        onTap: () =>
+            Navigator.of(context).pushNamed(PageRoutesName.pickEventMap),
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 12.0),
           child: Row(
@@ -766,16 +855,22 @@ class _EventCreationViewState extends State<EventCreationView> {
                 child: Icon(
                   Icons.my_location,
                   size: 30,
-                  color: Provider.of<SettingProvider>(context).isDark() ? AppColors.darkBackGroundColor : Colors.white,
+                  color: Provider.of<SettingProvider>(context).isDark()
+                      ? AppColors.darkBackGroundColor
+                      : Colors.white,
                 ),
               ),
               SizedBox(width: 15),
               Expanded(
                 child: Text(
-                  appProvider.eventLocation == null
-                      ? 'Choose event Location'
-                      : "Location : ${appProvider.eventLocation!.latitude.toString()}, ${appProvider.eventLocation!.longitude.toString()}",
-                  style: theme.textTheme.bodyMedium?.copyWith(color: AppColors.primaryColor),
+                  widget.eventData != null
+                      ? "Location: ${widget.eventData?.lat.toString()} ,\n${widget.eventData?.long.toString()}"
+                      : (appProvider.eventLocation == null
+                            ? "Choose Location"
+                            : "Location: ${appProvider.eventLocation!.latitude.toString()} ,\n${appProvider.eventLocation!.longitude.toString()}"),
+                  style: theme.textTheme.bodyMedium?.copyWith(
+                    color: AppColors.primaryColor,
+                  ),
                   overflow: TextOverflow.ellipsis,
                 ),
               ),
@@ -796,5 +891,28 @@ class _EventCreationViewState extends State<EventCreationView> {
     ).then((value) {
       if (value != null) setState(() => selectedDate = value);
     });
+  }
+
+  void getCurrentTime() async {
+    final TimeOfDay? pickedTime = await showTimePicker(
+      context: context,
+      initialTime: TimeOfDay.now(),
+    );
+
+    if (pickedTime != null) {
+      setState(() {
+        // Combine with selectedDate if it exists, or use today
+        final DateTime now = DateTime.now();
+        final DateTime baseDate =
+            selectedDate ?? DateTime(now.year, now.month, now.day);
+        selectedTime = DateTime(
+          baseDate.year,
+          baseDate.month,
+          baseDate.day,
+          pickedTime.hour,
+          pickedTime.minute,
+        );
+      });
+    }
   }
 }
